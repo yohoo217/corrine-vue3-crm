@@ -1,3 +1,4 @@
+// server/models/Course.js
 const mongoose = require('mongoose');
 
 const CourseSchema = new mongoose.Schema({
