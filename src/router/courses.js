@@ -7,8 +7,9 @@ router.get('/', async (req, res) => {
   try {
     const courses = await Course.find();
     res.json(courses);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  } catch (error) {
+    console.error('Error fetching courses:', error);
+    res.status(500).json({ message: 'Error fetching courses', error: error.message });
   }
 });
 

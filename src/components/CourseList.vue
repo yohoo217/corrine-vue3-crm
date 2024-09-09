@@ -1,23 +1,29 @@
 <!-- src/components/CourseList.vue -->
+<template>
+  <div>
+    <h2>課程列表</h2>
+    <ul>
+      <li v-for="course in courses" :key="course.id">
+        {{ course.name }}
+      </li>
+    </ul>
+  </div>
+</template>
+
 <script>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { useStore } from 'vuex';
+import { computed, onMounted } from 'vue';
 
 export default {
   name: 'CourseList',
-  setup() {
-    const courses = ref([]);
+  setup() {    
+    const store = useStore();
 
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get('http://localhost:5001/api/courses');
-        courses.value = response.data;
-      } catch (error) {
-        console.error('Error fetching courses:', error);
-      }
-    };
-
-    onMounted(fetchCourses);
+    onMounted(() => {
+      store.dispatch('courses/fetchCourses');
+    });
+    
+    const courses = computed(() => store.state.courses.list);
 
     return {
       courses,

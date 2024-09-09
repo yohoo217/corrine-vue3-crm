@@ -60,16 +60,21 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue';
 import Card from 'primevue/card';
 import Button from 'primevue/button';
 
-export default {
+export default defineComponent({
   name: 'HomePage',
   components: {
     Card,
     Button
+  },
+  setup() {
+    // 如果需要，可以在這裡添加更多邏輯
+    return {};
   }
-}
+});
 </script>
 
 <style scoped>

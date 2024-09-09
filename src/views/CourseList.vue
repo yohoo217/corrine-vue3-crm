@@ -1,3 +1,4 @@
+<!-- src/views/CourseList.js -->
 <template>
   <div class="course-list">
     <Toast />
@@ -187,21 +188,24 @@ export default {
       });
     };
 
-    const saveCourse = () => {
+    const saveCourse = async () => {
       submitted.value = true;
 
       if (course.value.name?.trim()) {
-        if (course.value.id) {
-          store.dispatch('courses/updateCourse', course.value);
-          toast.add({severity:'success', summary: '成功', detail: '課程已更新', life: 3000});
+        try {
+          if (course.value.id) {
+            await store.dispatch('courses/updateCourse', course.value);
+            toast.add({severity:'success', summary: '成功', detail: '課程已更新', life: 3000});
+          } else {
+            await store.dispatch('courses/addCourse', course.value);
+            toast.add({severity:'success', summary: '成功', detail: '課程已創建', life: 3000});
+          }
+          courseDialog.value = false;
+          course.value = {};
+        } catch (error) {
+          toast.add({severity:'error', summary: '錯誤', detail: '保存課程時發生錯誤', life: 3000});
+          console.error('Error saving course:', error);
         }
-        else {
-          store.dispatch('courses/addCourse', course.value);
-          toast.add({severity:'success', summary: '成功', detail: '課程已創建', life: 3000});
-        }
-
-        courseDialog.value = false;
-        course.value = {};
       }
     };
 

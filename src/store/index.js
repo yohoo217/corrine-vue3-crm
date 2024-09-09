@@ -1,14 +1,20 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
+import courses from './modules/courses'
 
-const API_URL = 'http://localhost:5000/api'
+const API_URL = 'http://localhost:5001/api'
+
+const apiClient = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  timeout: 10000,
+  withCredentials: true
+});
 
 const customers = {
-  // ... 保持現有的 customers 模塊不變
-}
-
-const courses = {
-  // ... 保持現有的 courses 模塊不變
+  // 保持為空，如原始代碼
 }
 
 const bookings = {
@@ -27,7 +33,7 @@ const bookings = {
   actions: {
     async fetchBookings({ commit }) {
       try {
-        const response = await axios.get(`${API_URL}/bookings`);
+        const response = await apiClient.get('/bookings');
         commit('setBookings', response.data);
       } catch (error) {
         console.error('Error fetching bookings:', error);
@@ -36,7 +42,7 @@ const bookings = {
     },
     async createBooking({ commit }, booking) {
       try {
-        const response = await axios.post(`${API_URL}/bookings`, booking);
+        const response = await apiClient.post('/bookings', booking);
         commit('addBooking', response.data);
       } catch (error) {
         console.error('Error creating booking:', error);
@@ -46,10 +52,36 @@ const bookings = {
   }
 };
 
+// 修改 courses 模塊以使用新的 apiClient
+const updatedCourses = {
+  ...courses,
+  actions: {
+    ...courses.actions,
+    async fetchCourses({ commit }) {
+      try {
+        const response = await apiClient.get('/courses');
+        commit('setCourses', response.data);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+        throw error;
+      }
+    },
+    async addCourse({ dispatch }, courseData) {
+      try {
+        await apiClient.post('/courses', courseData);
+        await dispatch('fetchCourses');
+      } catch (error) {
+        console.error('Error adding course:', error);
+        throw error;
+      }
+    }
+  }
+};
+
 export default createStore({
   modules: {
     customers,
-    courses,
+    courses: updatedCourses,
     bookings
   }
 })
