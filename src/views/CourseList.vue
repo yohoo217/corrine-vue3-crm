@@ -155,7 +155,9 @@ export default {
     });
 
     onMounted(() => {
-      store.dispatch('courses/fetchCourses');
+      if (courses.value.length === 0) {
+        store.dispatch('courses/fetchCourses');
+      }
     });
 
     const formatDate = (value) => {
