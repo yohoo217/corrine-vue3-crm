@@ -15,7 +15,8 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useStore } from 'vuex';
 import Menubar from 'primevue/menubar';
 import InputText from 'primevue/inputtext';
 import Toast from 'primevue/toast'
@@ -32,6 +33,7 @@ export default {
     InputText
   },
   setup() {
+    const store = useStore();
     const items = ref([
       {
         label: '首頁',
@@ -54,6 +56,9 @@ export default {
         to: '/crm'
       }
     ]);
+    onMounted(() => {
+      store.dispatch('courses/fetchCourses');
+    });
 
     return { items };
   }

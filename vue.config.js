@@ -19,5 +19,12 @@ module.exports = defineConfig({
         `
       }
     }
+  },
+  devServer: {
+    host: '0.0.0.0',
+    port: 8080,
+    client: {
+      webSocketURL: 'auto://0.0.0.0:0/ws',
+    },
   }
 })
