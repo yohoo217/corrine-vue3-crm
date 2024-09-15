@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <ErrorBoundary>
+    <p>Debug: App.vue is rendering</p>
     <Menubar :model="items">
       <template #start>
         <img alt="Logo" src="@/assets/logo.png" height="40" class="mr-2" />
@@ -11,6 +13,7 @@
     <router-view></router-view>
     <Toast />  <!-- 添加這行 -->
     <ConfirmDialog></ConfirmDialog>  <!-- 添加這行 -->
+  </ErrorBoundary>
   </div>
 </template>
 
@@ -71,10 +74,27 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  margin-top: 60px;
+}
+
+/* 添加这些样式 */
+.booking-page {
+  padding: 20px;
+  background-color: #f0f0f0;
+  min-height: 100vh;
 }
 
 body {
   margin: 0;
   padding: 0;
+}
+
+.p-field {
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
 }
 </style>
