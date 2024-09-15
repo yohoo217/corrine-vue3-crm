@@ -16,7 +16,8 @@ router.get("/", async (req, res) => {
 // 創建新預約
 router.post('/', async (req, res) => {
   console.log("Received booking data:", req.body);
-  const booking = new Booking(req.body);
+  const bookingData = { ...req.body, customer: req.body.customer || null };
+  const booking = new Booking(bookingData);
   try {
     const newBooking = await booking.save();
     console.log("New booking created:", newBooking);
