@@ -1,21 +1,23 @@
 // src/store/modules/courses.js
-import axios from "axios";
 import apiClient from "@/api/config";
-
-axios.defaults.baseURL = "http://localhost:5001/api";
 
 const state = {
   list: [],
+  isLoading: false,
+  error: null,
 };
 
 const mutations = {
   setCourses(state, courses) {
     console.log("Setting courses in state, raw data:", JSON.stringify(courses));
-    state.list = courses.map((course) => ({
-      id: course.id || course._id, // 使用 id 或 _id
-      name: course.name,
-      // 添加其他需要的字段
-    }));
+    state.list = courses.map((course) => {
+      console.log("Mapping course:", course);
+      return {
+        id: course.id || course._id,
+        name: course.name,
+        // 添加其他需要的字段
+      };
+    });
     console.log("Courses after mapping:", JSON.stringify(state.list));
   },
   addCourse(state, course) {
@@ -30,11 +32,19 @@ const mutations = {
   deleteCourse(state, courseId) {
     state.list = state.list.filter((c) => c.id !== courseId);
   },
+  setLoading(state, isLoading) {
+    state.isLoading = isLoading;
+  },
+  setError(state, error) {
+    state.error = error;
+  },
 };
 
 const actions = {
   async fetchCourses({ commit }) {
     console.log("fetchCourses action called");
+    commit("setLoading", true);
+    commit("setError", null);
     try {
       const response = await apiClient.get("/courses");
       console.log(
@@ -44,12 +54,14 @@ const actions = {
       commit("setCourses", response.data);
     } catch (error) {
       console.error("Error fetching courses:", error);
-      throw error;
+      commit("setError", error.message);
+    } finally {
+      commit("setLoading", false);
     }
   },
   async addCourse({ commit }, course) {
     try {
-      const response = await axios.post("/courses", course);
+      const response = await apiClient.post("/courses", course);
       commit("addCourse", response.data);
     } catch (error) {
       console.error("Error adding course:", error);
@@ -58,7 +70,7 @@ const actions = {
   },
   async updateCourse({ commit }, course) {
     try {
-      const response = await axios.put(`/courses/${course.id}`, course);
+      const response = await apiClient.put(`/courses/${course.id}`, course);
       commit("updateCourse", response.data);
     } catch (error) {
       console.error("Error updating course:", error);
@@ -67,7 +79,7 @@ const actions = {
   },
   async deleteCourse({ commit }, courseId) {
     try {
-      await axios.delete(`/courses/${courseId}`);
+      await apiClient.delete(`/courses/${courseId}`);
       commit("deleteCourse", courseId);
     } catch (error) {
       console.error("Error deleting course:", error);
@@ -79,7 +91,7 @@ const actions = {
       return; // Course already in state, no need to fetch
     }
     try {
-      const response = await axios.get(`/courses/${courseId}`);
+      const response = await apiClient.get(`/courses/${courseId}`);
       commit("addCourse", response.data);
     } catch (error) {
       console.error("Error fetching course:", error);

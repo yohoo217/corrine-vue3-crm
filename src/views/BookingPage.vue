@@ -1,30 +1,40 @@
 <template>
-  <div class="booking-page">
+  <div class="booking-page" style="padding: 20px; background-color: #f0f0f0;">
+    <p>Debug: BookingPage is rendering</p>
     <Toast />
     <h2>課程預約</h2>
-    <form @submit.prevent="submitBooking" class="p-fluid">
+    <p>Debug: Courses count: {{ courses.length }}</p>
+    <p>Debug: Is loading: {{ $store.state.courses.isLoading }}</p>
+    <p>Debug: Error: {{ $store.state.courses.error }}</p>
+    <div v-show="$store.state.courses.isLoading">正在加載課程資料...</div>
+    <div v-show="$store.state.courses.error">
+      加載課程時出錯: {{ $store.state.courses.error }}
+    </div>
+    <form v-show="!$store.state.courses.isLoading && !$store.state.courses.error" @submit.prevent="submitBooking" class="p-fluid">
       <div class="p-field">
         <label for="course">選擇課程</label>
+        <div v-if="courses.length === 0">沒有可用的課程</div>
         <div
           v-for="course in courses"
-          :key="course.id || course._id"
+          :key="course.id"
           class="p-field-checkbox"
         >
           <RadioButton
-            :inputId="'course_' + (course.id || course._id)"
+            :inputId="'course_' + course.id"
             name="course"
-            :value="course"
-            v-model="selectedCourse"
+            :value="course.id"
+            v-model="booking.course"
             @change="onCourseChange(course)"
           />
-          <label :for="'course_' + (course.id || course._id)">
-            {{ course.name }} (ID: {{ course.id || course._id }})
+          <label :for="'course_' + course.id">
+            {{ course.name }} (ID: {{ course.id }})
           </label>
         </div>
         <small v-if="v$.booking.course.$invalid && submitted" class="p-error"
           >請選擇一個課程</small
         >
       </div>
+
       <div class="p-field">
         <label for="name">姓名</label>
         <InputText
@@ -64,7 +74,7 @@
 </template>
 
 <script>
-import { ref, reactive, computed, onMounted, watch } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email } from "@vuelidate/validators";
@@ -75,6 +85,9 @@ import Button from "primevue/button";
 import Toast from "primevue/toast";
 
 export default {
+  created() {
+    this.$store.dispatch('courses/fetchCourses')
+  },
   components: {
     RadioButton,
     InputText,
@@ -86,28 +99,15 @@ export default {
     const toast = useToast();
 
     const booking = reactive({
-      course: null, // 改为 course 而不是 courseId
+      course: null,
       name: "",
       email: "",
       phone: "",
     });
 
-    const selectedCourse = ref(null);
-    const submitted = ref(false);
-
-    const courses = computed(() => {
-      return store.state.courses.list;
-    });
-
-    watch(selectedCourse, (newCourse) => {
-      if (newCourse) {
-        onCourseChange(newCourse);
-      }
-    });
-
     const rules = {
       booking: {
-        course: { required }, // 使用 'course' 而不是 'courseId'
+        course: { required },
         name: { required },
         email: { required, email },
         phone: { required },
@@ -116,35 +116,32 @@ export default {
 
     const v$ = useVuelidate(rules, { booking });
 
-    const onCourseChange = (course) => {
-      console.log("Selected course (full object):", JSON.stringify(course));
-      if (course && (course.id || course._id)) {
-        booking.course = course.id || course._id;
-        console.log("Updated booking.course:", booking.course);
-      } else {
-        console.error(
-          "Selected course does not have a valid id:",
-          JSON.stringify(course)
-        );
-        booking.course = null; // 如果没有有效的 ID，将 course 设置为 null
+    const submitted = ref(false);
+
+    const courses = computed(() => {
+      console.log('Computed courses:', store.state.courses.list)
+      return store.state.courses.list
+    })
+
+    onMounted(() => {
+      console.log('BookingPage mounted')
+      if (courses.value.length === 0) {
+        console.log('Dispatching fetchCourses')
+        store.dispatch('courses/fetchCourses')
       }
+    })
+
+    const onCourseChange = (course) => {
+      console.log("Selected course:", course);
+      booking.course = course.id;
     };
 
     const submitBooking = async () => {
       submitted.value = true;
-      console.log(
-        "Submitting booking, current state:",
-        JSON.stringify(booking)
-      );
       const isFormCorrect = await v$.value.$validate();
       if (isFormCorrect) {
-        console.log("Sending booking data:", JSON.stringify(booking)); // 添加这行
         try {
-          const result = await store.dispatch(
-            "bookings/createBooking",
-            booking
-          );
-          console.log("Booking result:", result); // 添加这行
+          await store.dispatch("bookings/createBooking", booking);
           toast.add({
             severity: "success",
             summary: "成功",
@@ -152,13 +149,12 @@ export default {
             life: 3000,
           });
           // Reset form
-          booking.courseId = null;
+          booking.course = null;
           booking.name = "";
           booking.email = "";
           booking.phone = "";
           submitted.value = false;
         } catch (error) {
-          console.error("Booking submission error:", error.response?.data); // 修改这行
           toast.add({
             severity: "error",
             summary: "錯誤",
@@ -168,32 +164,16 @@ export default {
             life: 3000,
           });
         }
-      } else {
-        console.log("Form validation errors:", v$.value.$errors);
       }
     };
 
-    onMounted(async () => {
-      console.log("Component mounted");
-      try {
-        await store.dispatch("courses/fetchCourses");
-        console.log(
-          "Courses after fetching:",
-          JSON.stringify(store.state.courses.list)
-        );
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-      }
-    });
-
     return {
-      courses,
       booking,
       v$,
       submitted,
-      submitBooking,
+      courses,
       onCourseChange,
-      selectedCourse,
+      submitBooking
     };
   },
 };

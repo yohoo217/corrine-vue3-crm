@@ -1,7 +1,7 @@
 //src/store/index.js
 import { createStore } from "vuex";
 import axios from "axios";
-import courses from "./modules/courses";
+import originalCourses from "./modules/courses";
 
 const API_URL = "http://localhost:5001/api";
 
@@ -41,11 +41,12 @@ const bookings = {
         throw error;
       }
     },
-    async createBooking(_, bookingData) {
+    async createBooking({ commit }, bookingData) {
       try {
         console.log("Creating booking with data:", JSON.stringify(bookingData));
         const response = await apiClient.post("/bookings", bookingData);
         console.log("Booking creation response:", response.data);
+        commit("addBooking", response.data);
         return response.data;
       } catch (error) {
         console.error("Error in createBooking action:", error.response?.data);
@@ -56,10 +57,10 @@ const bookings = {
 };
 
 // 修改 courses 模塊以使用新的 apiClient
-const updatedCourses = {
-  ...courses,
+const courses = {
+  ...originalCourses,
   actions: {
-    ...courses.actions,
+    ...originalCourses.actions,
     async fetchCourses({ commit }) {
       try {
         const response = await apiClient.get("/courses");
@@ -84,7 +85,7 @@ const updatedCourses = {
 export default createStore({
   modules: {
     customers,
-    courses: updatedCourses,
+    courses,
     bookings,
   },
 });
