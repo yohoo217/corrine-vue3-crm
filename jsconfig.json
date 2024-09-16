@@ -1,3 +1,4 @@
+// jsconfig.json
 {
   "compilerOptions": {
     "target": "es5",
@@ -15,5 +16,9 @@
       "dom.iterable",
       "scripthost"
     ]
-  }
+  },
+  "include": [
+    "src/**/*",
+    "typings.d.ts" // 確保包含您的手動模組聲明
+  ]
 }
