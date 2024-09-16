@@ -1,5 +1,5 @@
 <template>
-  <div class="booking-page" style="padding: 20px; background-color: #f0f0f0;">
+  <div class="booking-page" style="padding: 20px; background-color: #f0f0f0">
     <p>Debug: BookingPage is rendering</p>
     <Toast />
     <h2>課程預約</h2>
@@ -10,7 +10,11 @@
     <div v-show="$store.state.courses.error">
       加載課程時出錯: {{ $store.state.courses.error }}
     </div>
-    <form v-show="!$store.state.courses.isLoading && !$store.state.courses.error" @submit.prevent="submitBooking" class="p-fluid">
+    <form
+      v-show="!$store.state.courses.isLoading && !$store.state.courses.error"
+      @submit.prevent="submitBooking"
+      class="p-fluid"
+    >
       <div class="p-field">
         <label for="course">選擇課程</label>
         <div v-if="courses.length === 0">沒有可用的課程</div>
@@ -68,6 +72,10 @@
           >請輸入有效的電話號碼</small
         >
       </div>
+      <div class="p-field">
+        <label for="customerId">客戶 ID（可選）</label>
+        <InputText id="customerId" v-model.trim="booking.customerId" />
+      </div>
       <Button type="submit" label="預約" />
     </form>
   </div>
@@ -86,7 +94,7 @@ import Toast from "primevue/toast";
 
 export default {
   created() {
-    this.$store.dispatch('courses/fetchCourses')
+    this.$store.dispatch("courses/fetchCourses");
   },
   components: {
     RadioButton,
@@ -103,6 +111,7 @@ export default {
       name: "",
       email: "",
       phone: "",
+      customerId: "", // 添加客戶 ID 欄位
     });
 
     const rules = {
@@ -119,17 +128,17 @@ export default {
     const submitted = ref(false);
 
     const courses = computed(() => {
-      console.log('Computed courses:', store.state.courses.list)
-      return store.state.courses.list
-    })
+      console.log("Computed courses:", store.state.courses.list);
+      return store.state.courses.list;
+    });
 
     onMounted(() => {
-      console.log('BookingPage mounted')
+      console.log("BookingPage mounted");
       if (courses.value.length === 0) {
-        console.log('Dispatching fetchCourses')
-        store.dispatch('courses/fetchCourses')
+        console.log("Dispatching fetchCourses");
+        store.dispatch("courses/fetchCourses");
       }
-    })
+    });
 
     const onCourseChange = (course) => {
       console.log("Selected course:", course);
@@ -141,20 +150,29 @@ export default {
       const isFormCorrect = await v$.value.$validate();
       if (isFormCorrect) {
         try {
-          await store.dispatch("bookings/createBooking", booking);
-          toast.add({
-            severity: "success",
-            summary: "成功",
-            detail: "預約已提交",
-            life: 3000,
-          });
-          // Reset form
+          console.log("Submitting booking data:", booking);
+          // 構建 bookingData，確保欄位名稱與後端模型一致
+          const bookingData = {
+            course: booking.course, // 修改這裡
+            customer: {
+              name: booking.name,
+              email: booking.email,
+              phone: booking.phone,
+            },
+          };
+          if (booking.customerId && booking.customerId !== "") {
+            bookingData.customerId = booking.customerId;
+          }
+          console.log("Final booking data to submit:", bookingData);
+          await store.dispatch("bookings/createBooking", bookingData);
+          // 重置表單
           booking.course = null;
           booking.name = "";
           booking.email = "";
           booking.phone = "";
           submitted.value = false;
         } catch (error) {
+          console.error("Error details:", error);
           toast.add({
             severity: "error",
             summary: "錯誤",
@@ -173,7 +191,7 @@ export default {
       submitted,
       courses,
       onCourseChange,
-      submitBooking
+      submitBooking,
     };
   },
 };

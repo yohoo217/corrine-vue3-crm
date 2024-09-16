@@ -1,5 +1,6 @@
 <template>
   <div class="home-page">
+    <p>Debug: HomePage is rendering</p>
     <div class="p-d-flex p-jc-center">
       <div class="p-mr-2">
         <h1>歡迎來到課程管理系統</h1>
