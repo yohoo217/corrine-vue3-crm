@@ -6,6 +6,7 @@ const Booking = require("../models/Booking"); // 確保您有一個對應的 Boo
 // 獲取所有預約
 router.get("/", async (req, res) => {
   try {
+    console.log("Received booking data:", req.body);
     const bookings = await Booking.find();
     res.json(bookings);
   } catch (err) {
@@ -14,20 +15,29 @@ router.get("/", async (req, res) => {
 });
 
 // 創建新預約
-router.post('/', async (req, res) => {
-  console.log("Received booking data:", req.body);
-  const bookingData = { ...req.body, customer: req.body.customer || null };
-  const booking = new Booking(bookingData);
+// /server/routes/bookings.js
+
+router.post("/", async (req, res) => {
   try {
-    const newBooking = await booking.save();
-    console.log("New booking created:", newBooking);
-    res.status(201).json(newBooking);
-  } catch (err) {
-    console.error("Booking creation error:", err);
-    if (err.name === 'ValidationError') {
-      return res.status(400).json({ message: 'Validation Error', details: err.errors });
+    console.log("Received booking data:", req.body);
+    const { course, customer, customerId } = req.body;
+
+    const bookingData = {
+      course,
+      customer,
+    };
+
+    if (customerId && customerId !== "") {
+      bookingData.customerId = customerId;
     }
-    res.status(500).json({ message: 'Server Error', error: err.message });
+
+    console.log("Creating booking with data:", bookingData);
+    const newBooking = new Booking(bookingData);
+    await newBooking.save();
+    res.status(201).json(newBooking);
+  } catch (error) {
+    console.error("Error creating booking:", error);
+    res.status(400).json({ message: error.message });
   }
 });
 
