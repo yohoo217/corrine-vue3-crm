@@ -6,6 +6,8 @@ import BookingPage from "@/views/BookingPage.vue";
 import CourseInfo from "../views/CourseInfo.vue";
 import CourseDetail from "../views/CourseDetail.vue";
 import NewsPage from '../views/NewsPage.vue'; // 修改為新的組件名稱
+import UserLogin from '../views/UserLogin.vue';
+import UserRegister from '../views/UserRegister.vue';
 import CRM from "@/views/CRM.vue";
 
 const routes = [
@@ -40,6 +42,9 @@ const routes = [
     component: CRM,
   },
   { path: "/news", name: "News", component: NewsPage }, // 新增最新消息的路由
+  { path: '/', component: HomePage },
+  { path: '/login', component: UserLogin },
+  { path: '/register', component: UserRegister },
 ];
 
 const router = createRouter({

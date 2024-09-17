@@ -2,6 +2,7 @@
 import { createStore } from "vuex";
 import axios from "axios";
 import originalCourses from "./modules/courses";
+import auth from './modules/auth';
 
 const API_URL = "http://localhost:5001/api";
 
@@ -87,5 +88,6 @@ export default createStore({
     customers,
     courses,
     bookings,
+    auth,
   },
 });

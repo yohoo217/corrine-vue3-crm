@@ -35,6 +35,9 @@ app.get('/api/test', (req, res) => {
 // MongoDB 連接
 const MONGODB_URI = process.env.MONGODB_URI;
 console.log('MONGODB_URI:', MONGODB_URI);
+// 導入路由
+const userRoutes = require('./routes/users');
+app.use('/api/users', userRoutes);
 
 if (!MONGODB_URI) {
   console.error('MONGODB_URI is not defined in the environment variables.');
