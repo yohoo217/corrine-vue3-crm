@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <ErrorBoundary>
-      <p>Debug: App.vue is rendering</p>
       <Menubar :model="items">
         <template #start>
           <img
@@ -11,29 +10,23 @@
             class="mr-2"
           />
         </template>
-        <!-- <template #end>輸入欄好像用不到
-          <InputText placeholder="Search" type="text" />
-        </template> -->
       </Menubar>
       <router-view></router-view>
-      <SiteFooter /> <!-- 使用 SiteFooter 組件 -->
+      <SiteFooter />
       <Toast />
-      <!-- 添加這行 -->
-      <ConfirmDialog></ConfirmDialog>
-      <!-- 添加這行 -->
+      <ConfirmDialog />
     </ErrorBoundary>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import Menubar from "primevue/menubar";
 import SiteFooter from './components/SiteFooter.vue';
-// import InputText from "primevue/inputtext";
 import Toast from "primevue/toast";
 import ConfirmDialog from "primevue/confirmdialog";
-import { useRouter } from "vue-router";
 
 export default {
   name: "App",
@@ -42,55 +35,92 @@ export default {
     SiteFooter,
     Toast,
     ConfirmDialog,
-    // InputText,
   },
   setup() {
     const store = useStore();
     const router = useRouter();
-    const items = ref([
-      {
-        label: "首頁",
-        icon: "pi pi-fw pi-home",
-        command: () => {
-          router.push("/");
+
+    // 检查用户是否已认证
+    const isAuthenticated = computed(() => store.getters.isAuthenticated);
+
+    // 定义菜单项
+    const items = computed(() => {
+      const menuItems = [
+        {
+          label: "首頁",
+          icon: "pi pi-fw pi-home",
+          command: () => {
+            router.push("/");
+          },
         },
-      },
-      {
-        label: '最新消息',  // 新增最新消息的選項
-        icon: 'pi pi-fw pi-info-circle',
-        command: () => {
-          router.push('/news'); // 指定導向的路徑
+        {
+          label: "最新消息",
+          icon: "pi pi-fw pi-info-circle",
+          command: () => {
+            router.push("/news");
+          },
         },
-      },
-      {
-        label: "課程資訊", // 新增的選項
-        icon: "pi pi-fw pi-info-circle",
-        command: () => {
-          router.push("/course-info");
+        {
+          label: "課程資訊",
+          icon: "pi pi-fw pi-info-circle",
+          command: () => {
+            router.push("/course-info");
+          },
         },
-      },
-      {
-        label: "編輯課程",
-        icon: "pi pi-fw pi-calendar",
-        command: () => {
-          router.push("/courses");
+        {
+          label: "編輯課程",
+          icon: "pi pi-fw pi-calendar",
+          command: () => {
+            router.push("/courses");
+          },
         },
-      },
-      {
-        label: "預約課程",
-        icon: "pi pi-fw pi-pencil",
-        command: () => {
-          router.push("/booking");
+        {
+          label: "預約課程",
+          icon: "pi pi-fw pi-pencil",
+          command: () => {
+            router.push("/booking");
+          },
         },
-      },
-      {
-        label: "CRM",
-        icon: "pi pi-fw pi-users",
-        command: () => {
-          router.push("/crm");
+        {
+          label: "CRM",
+          icon: "pi pi-fw pi-users",
+          command: () => {
+            router.push("/crm");
+          },
         },
-      },
-    ]);
+      ];
+
+      // 根据用户认证状态添加“登入/註冊”或“登出”
+      if (isAuthenticated.value) {
+        menuItems.push({
+          label: "登出",
+          icon: "pi pi-fw pi-sign-out",
+          command: () => {
+            store.dispatch("auth/logout");
+            router.push("/");
+          },
+        });
+      } else {
+        menuItems.push(
+          {
+            label: "登入",
+            icon: "pi pi-fw pi-sign-in",
+            command: () => {
+              router.push("/login");
+            },
+          },
+          {
+            label: "註冊",
+            icon: "pi pi-fw pi-user-plus",
+            command: () => {
+              router.push("/register");
+            },
+          }
+        );
+      }
+
+      return menuItems;
+    });
 
     onMounted(() => {
       store.dispatch("courses/fetchCourses");
@@ -100,34 +130,3 @@ export default {
   },
 };
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
-/* 添加这些样式 */
-.booking-page {
-  padding: 20px;
-  background-color: #f0f0f0;
-  min-height: 100vh;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-}
-
-.p-field {
-  margin-bottom: 1rem;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-</style>
