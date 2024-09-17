@@ -9,7 +9,9 @@ import NewsPage from '../views/NewsPage.vue';
 import UserLogin from '../views/UserLogin.vue';
 import UserRegister from '../views/UserRegister.vue';
 import CRM from "@/views/CRM.vue";
-import store from '../store'; // 确保引入 Vuex Store
+import store from '../store';
+import PersonalInfo from '../views/PersonalInfo.vue';
+
 
 const routes = [
   {
@@ -17,6 +19,7 @@ const routes = [
     name: "Home",
     component: HomePage,
   },
+  { path: '/personal-info', component: PersonalInfo }, // 添加个人资料页面的路由
   {
     path: "/course-info",
     name: "CourseInfo",

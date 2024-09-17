@@ -4,6 +4,7 @@ const router = express.Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const auth = require('../../middleware/auth'); // 从 /server/routes/users.js 指向 /middleware/auth.js
 
 // 註冊路由
 router.post("/register", async (req, res) => {
@@ -42,6 +43,14 @@ router.post("/login", async (req, res) => {
   }
 });
 
-
+router.get('/me', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user).select('-password'); // 排除密码字段
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
 module.exports = router;
