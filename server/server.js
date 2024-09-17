@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
+const coursesRouter = require('./routes/courses'); // 确保路径正确
 
 const PORT = process.env.PORT || 5001;
 
@@ -16,6 +17,8 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use('/api/courses', coursesRouter);
+
 
 // 日誌中間件
 app.use((req, res, next) => {
