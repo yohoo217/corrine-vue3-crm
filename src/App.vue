@@ -16,6 +16,7 @@
         </template> -->
       </Menubar>
       <router-view></router-view>
+      <SiteFooter /> <!-- 使用 SiteFooter 組件 -->
       <Toast />
       <!-- 添加這行 -->
       <ConfirmDialog></ConfirmDialog>
@@ -28,15 +29,17 @@
 import { ref, onMounted } from "vue";
 import { useStore } from "vuex";
 import Menubar from "primevue/menubar";
+import SiteFooter from './components/SiteFooter.vue';
 // import InputText from "primevue/inputtext";
 import Toast from "primevue/toast";
 import ConfirmDialog from "primevue/confirmdialog";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 export default {
   name: "App",
   components: {
     Menubar,
+    SiteFooter,
     Toast,
     ConfirmDialog,
     // InputText,
@@ -53,14 +56,28 @@ export default {
         },
       },
       {
-        label: "課程",
+        label: '最新消息',  // 新增最新消息的選項
+        icon: 'pi pi-fw pi-info-circle',
+        command: () => {
+          router.push('/news'); // 指定導向的路徑
+        },
+      },
+      {
+        label: "課程資訊", // 新增的選項
+        icon: "pi pi-fw pi-info-circle",
+        command: () => {
+          router.push("/course-info");
+        },
+      },
+      {
+        label: "編輯課程",
         icon: "pi pi-fw pi-calendar",
         command: () => {
           router.push("/courses");
         },
       },
       {
-        label: "預約",
+        label: "預約課程",
         icon: "pi pi-fw pi-pencil",
         command: () => {
           router.push("/booking");
