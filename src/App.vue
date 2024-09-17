@@ -40,82 +40,39 @@ export default {
     const store = useStore();
     const router = useRouter();
 
-    // 检查用户是否已认证
-    const isAuthenticated = computed(() => store.getters.isAuthenticated);
+    // 获取 Vuex 中的登录状态和角色
+    const isAuthenticated = computed(() => store.getters['auth/isAuthenticated']);
+    const userRole = computed(() => store.getters['auth/userRole']);
 
-    // 定义菜单项
+    // 根据不同状态和角色设置菜单项
     const items = computed(() => {
-      const menuItems = [
-        {
-          label: "首頁",
-          icon: "pi pi-fw pi-home",
-          command: () => {
-            router.push("/");
-          },
-        },
-        {
-          label: "最新消息",
-          icon: "pi pi-fw pi-info-circle",
-          command: () => {
-            router.push("/news");
-          },
-        },
-        {
-          label: "課程資訊",
-          icon: "pi pi-fw pi-info-circle",
-          command: () => {
-            router.push("/course-info");
-          },
-        },
-        {
-          label: "編輯課程",
-          icon: "pi pi-fw pi-calendar",
-          command: () => {
-            router.push("/courses");
-          },
-        },
-        {
-          label: "預約課程",
-          icon: "pi pi-fw pi-pencil",
-          command: () => {
-            router.push("/booking");
-          },
-        },
-        {
-          label: "CRM",
-          icon: "pi pi-fw pi-users",
-          command: () => {
-            router.push("/crm");
-          },
-        },
+      let menuItems = [
+        { label: "首頁", icon: "pi pi-fw pi-home", command: () => router.push("/") },
+        { label: "最新消息", icon: "pi pi-fw pi-info-circle", command: () => router.push("/news") },
+        { label: "課程資訊", icon: "pi pi-fw pi-info-circle", command: () => router.push("/course-info") },
       ];
 
-      // 根据用户认证状态添加“登入/註冊”或“登出”
-      if (isAuthenticated.value) {
-        menuItems.push({
-          label: "登出",
-          icon: "pi pi-fw pi-sign-out",
-          command: () => {
-            store.dispatch("auth/logout");
-            router.push("/");
-          },
-        });
-      } else {
+      // 未登录状态或为 guest 时，显示“登入”和“註冊”按钮
+      if (!isAuthenticated.value || userRole.value === 'guest') {
         menuItems.push(
-          {
-            label: "登入",
-            icon: "pi pi-fw pi-sign-in",
-            command: () => {
-              router.push("/login");
-            },
-          },
-          {
-            label: "註冊",
-            icon: "pi pi-fw pi-user-plus",
-            command: () => {
-              router.push("/register");
-            },
-          }
+          { label: "登入", icon: "pi pi-fw pi-sign-in", command: () => router.push("/login") },
+          { label: "註冊", icon: "pi pi-fw pi-user-plus", command: () => router.push("/register") }
+        );
+      } 
+      // 普通用户状态
+      else if (userRole.value === 'user') {
+        menuItems.push(
+          { label: "預約課程", icon: "pi pi-fw pi-pencil", command: () => router.push("/booking") },
+          { label: "個人資訊", icon: "pi pi-fw pi-user", command: () => router.push("/personal-info") },
+          { label: "登出", icon: "pi pi-fw pi-sign-out", command: () => store.dispatch('auth/logout') }
+        );
+      } 
+      // 管理员状态
+      else if (userRole.value === 'admin') {
+        menuItems.push(
+          { label: "編輯課程", icon: "pi pi-fw pi-calendar", command: () => router.push("/courses") },
+          { label: "CRM", icon: "pi pi-fw pi-users", command: () => router.push("/crm") },
+          { label: "登出", icon: "pi pi-fw pi-sign-out", command: () => store.dispatch('auth/logout') }
         );
       }
 
