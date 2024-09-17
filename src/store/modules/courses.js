@@ -12,10 +12,10 @@ const mutations = {
     console.log("Setting courses in state, raw data:", JSON.stringify(courses));
     state.list = courses.map((course) => {
       console.log("Mapping course:", course);
+      // 完整保存課程資料
       return {
+        ...course,  // 使用擴展運算符保留所有欄位
         id: course.id || course._id,
-        name: course.name,
-        // 添加其他需要的字段
       };
     });
     console.log("Courses after mapping:", JSON.stringify(state.list));
