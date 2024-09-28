@@ -7,4 +7,6 @@ const CustomerSchema = new mongoose.Schema({
   lastContact: { type: Date, default: Date.now }
 });
 
+
+
 module.exports = mongoose.model('Customer', CustomerSchema);
