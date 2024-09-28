@@ -24,14 +24,18 @@ const mutations = {
 };
 
 const actions = {
-  async fetchCustomers({ commit }) {
-    try {
-      const response = await apiClient.get('/customers');
-      commit('SET_CUSTOMERS', response.data);
-    } catch (error) {
-      console.error('Failed to fetch customers:', error);
-    }
-  },
+    async fetchCustomers({ commit }) {
+        try {
+          const response = await apiClient.get('/customers');
+          const customers = response.data.map(customer => ({
+            ...customer,
+            _id: customer._id.$oid || customer._id, // Extract the string ID
+          }));
+          commit('SET_CUSTOMERS', customers); // Use 'customers' here
+        } catch (error) {
+          console.error('Failed to fetch customers:', error);
+        }
+      },
   async addCustomer({ commit }, customer) {
     try {
       const response = await apiClient.post('/customers', customer);
@@ -51,10 +55,18 @@ const actions = {
   },
   async deleteCustomer({ commit }, customerId) {
     try {
-      await apiClient.delete(`/customers/${customerId}`);
-      commit('DELETE_CUSTOMER', customerId);
+      console.log('Attempting to delete customer:', customerId);
+      const id = customerId.$oid || customerId; // 處理可能的對象格式
+      const response = await apiClient.delete(`/customers/${id}`);
+      console.log('Delete response:', response);
+      if (response.status === 200) {
+        commit('DELETE_CUSTOMER', id);
+      } else {
+        throw new Error('Failed to delete customer');
+      }
     } catch (error) {
       console.error('Failed to delete customer:', error);
+      throw error;
     }
   }
 };

@@ -148,7 +148,8 @@ export default {
         await store.dispatch('customers/deleteCustomer', data._id);
         toast.add({severity:'success', summary: 'Successful', detail: 'Customer Deleted', life: 3000});
       } catch (error) {
-        toast.add({severity:'error', summary: 'Error', detail: 'Failed to delete customer', life: 3000});
+        console.error('Error deleting customer:', error);
+        toast.add({severity:'error', summary: 'Error', detail: `Failed to delete customer: ${error.message}`, life: 3000});
       }
     };
 
