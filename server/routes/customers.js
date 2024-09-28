@@ -41,10 +41,20 @@ router.put('/:id', async (req, res) => {
 // Delete a customer
 router.delete('/:id', async (req, res) => {
   try {
-    await Customer.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Customer deleted' });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.log('Attempting to delete user with ID:', req.params.id);
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if (!deletedUser) {
+      console.log('User not found');
+      return res.status(404).json({ message: "User not found" });
+    }
+    console.log('User deleted successfully:', deletedUser);
+    res.json({ message: "User deleted successfully", user: deletedUser });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    if (error.name === 'CastError') {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
+    res.status(500).json({ message: "Error deleting user", error: error.message });
   }
 });
 
