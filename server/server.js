@@ -4,7 +4,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
-const coursesRouter = require('./routes/courses'); // 确保路径正确
+const customersRouter = require('./routes/customers');
+const coursesRouter = require('./routes/courses');
 
 const PORT = process.env.PORT || 5001;
 
@@ -18,6 +19,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use('/api/courses', coursesRouter);
+app.use('/api/customers', customersRouter);
 
 
 // 日誌中間件
@@ -40,6 +42,8 @@ const MONGODB_URI = process.env.MONGODB_URI;
 console.log('MONGODB_URI:', MONGODB_URI);
 // 導入路由
 const userRoutes = require('./routes/users');
+
+
 app.use('/api/users', userRoutes);
 
 if (!MONGODB_URI) {

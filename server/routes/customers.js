@@ -2,16 +2,20 @@
 const express = require('express');
 const router = express.Router();
 const Customer = require('../models/Customer');
+const User = require('../models/User'); // Use the User model
 
-// Get all customers
+
+// GET /api/customers
 router.get('/', async (req, res) => {
   try {
-    const customers = await Customer.find();
+    // Fetch all users without any filter
+    const customers = await User.find({ isAdmin: false });
     res.json(customers);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 // Create a new customer
 router.post('/', async (req, res) => {

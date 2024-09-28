@@ -9,7 +9,7 @@
                    :rowsPerPageOptions="[5,10,20,50]"
                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                    responsiveLayout="scroll"
-                   :globalFilterFields="['name','email','phone']">
+                   :globalFilterFields="['username','email']">
           <template #header>
             <div class="flex justify-content-between">
               <Button type="button" icon="pi pi-filter-slash" label="Clear" outlined @click="clearFilter()" />
@@ -19,9 +19,8 @@
               </span>
             </div>
           </template>
-          <Column field="name" header="Name" sortable style="width:25%"></Column>
+          <Column field="username" header="UserName" sortable style="width:25%"></Column>
           <Column field="email" header="Email" sortable style="width:25%"></Column>
-          <Column field="phone" header="Phone" sortable style="width:25%"></Column>
           <Column header="Actions" style="width:25%">
             <template #body="slotProps">
               <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="editCustomer(slotProps.data)" />
@@ -37,19 +36,15 @@
 
     <Dialog v-model:visible="customerDialog" :style="{width: '450px'}" header="Customer Details" :modal="true" class="p-fluid">
       <div class="field">
-        <label for="name">Name</label>
-        <InputText id="name" v-model.trim="customer.name" required autofocus :class="{'p-invalid': submitted && !customer.name}" />
-        <small class="p-error" v-if="submitted && !customer.name">Name is required.</small>
+        <label for="username">Username</label>
+        <InputText id="username" v-model.trim="customer.username" required autofocus :class="{'p-invalid': submitted && !customer.username}" />
+        <small class="p-error" v-if="submitted && !customer.username">Username is required.</small>
       </div>
+
       <div class="field">
         <label for="email">Email</label>
         <InputText id="email" v-model.trim="customer.email" required :class="{'p-invalid': submitted && !customer.email}" />
         <small class="p-error" v-if="submitted && !customer.email">Email is required.</small>
-      </div>
-      <div class="field">
-        <label for="phone">Phone</label>
-        <InputText id="phone" v-model.trim="customer.phone" required :class="{'p-invalid': submitted && !customer.phone}" />
-        <small class="p-error" v-if="submitted && !customer.phone">Phone is required.</small>
       </div>
       <template #footer>
         <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
@@ -95,7 +90,7 @@ export default {
     const toast = useToast();
     const confirm = useConfirm();
 
-    const customers = computed(() => store.state.customers.list);
+    const customers = computed(() => store.getters['customers/getCustomers']);
     const customerDialog = ref(false);
     const customer = ref({});
     const submitted = ref(false);
@@ -164,10 +159,10 @@ export default {
 
     const saveCustomer = async () => {
       submitted.value = true;
-      if (customer.value.name && customer.value.email && customer.value.phone) {
+      if (customer.value.username && customer.value.email) {
         try {
           if (customer.value._id) {
-            await store.dispatch('customers/updateCustomer', customer.value);
+            await store.dispatch('customers/updateCustomer', customer.value);  // Ensure customer.name is used
             toast.add({severity:'success', summary: 'Successful', detail: 'Customer Updated', life: 3000});
           } else {
             await store.dispatch('customers/addCustomer', customer.value);
@@ -180,6 +175,7 @@ export default {
         }
       }
     };
+
 
     return {
       customers,
