@@ -5,7 +5,6 @@ const Course = require('../models/Course');
 
 // Get all courses
 router.get('/', async (req, res) => {
-    console.log('GET /api/courses request received');
     try {
       const courses = await Course.find();
       res.json(courses);
@@ -17,7 +16,6 @@ router.get('/', async (req, res) => {
 
 // Create a new course
 router.post('/', async (req, res) => {
-  console.log('POST /api/courses request received', req.body);
   try {
     const course = new Course(req.body);
     const savedCourse = await course.save();

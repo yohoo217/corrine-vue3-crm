@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const BookingSchema = new mongoose.Schema({
   course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
-  customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Refer to 'User' instead of 'Customer'
+  customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   customer: {
     name: { type: String, required: true },
     email: { type: String, required: true },
@@ -11,5 +11,6 @@ const BookingSchema = new mongoose.Schema({
   },
   date: { type: Date, default: Date.now },
 });
+
 
 module.exports = mongoose.model('Booking', BookingSchema);
