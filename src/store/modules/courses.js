@@ -9,16 +9,13 @@ const state = {
 
 const mutations = {
   setCourses(state, courses) {
-    console.log("Setting courses in state, raw data:", JSON.stringify(courses));
     state.list = courses.map((course) => {
-      console.log("Mapping course:", course);
       // 完整保存課程資料
       return {
         ...course,  // 使用擴展運算符保留所有欄位
         id: course.id || course._id,
       };
     });
-    console.log("Courses after mapping:", JSON.stringify(state.list));
   },
   addCourse(state, course) {
     state.list.push(course);
@@ -42,15 +39,10 @@ const mutations = {
 
 const actions = {
   async fetchCourses({ commit }) {
-    console.log("fetchCourses action called");
     commit("setLoading", true);
     commit("setError", null);
     try {
       const response = await apiClient.get("/courses");
-      console.log(
-        "Courses fetched successfully, raw data:",
-        JSON.stringify(response.data)
-      );
       commit("setCourses", response.data);
     } catch (error) {
       console.error("Error fetching courses:", error);
