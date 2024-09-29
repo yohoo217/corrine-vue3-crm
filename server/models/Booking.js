@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const BookingSchema = new mongoose.Schema({
   course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
-  customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer' },
+  customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Refer to 'User' instead of 'Customer'
   customer: {
     name: { type: String, required: true },
     email: { type: String, required: true },
