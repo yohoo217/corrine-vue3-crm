@@ -3,6 +3,18 @@ const express = require('express');
 const router = express.Router();
 const Booking = require('../models/Booking');
 
+// Get bookings for a specific user
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const bookings = await Booking.find({ customerId: userId }).populate('course');
+    res.json(bookings);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
 router.post('/', async (req, res) => {
   console.log("Received booking data:", req.body);
   const booking = new Booking(req.body);
