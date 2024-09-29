@@ -34,10 +34,6 @@ app.use(ConfirmationService)
 
 app.mount('#app')
 
-store.subscribe((mutation, state) => {
-    console.log('Mutation:', mutation.type, mutation.payload);
-    console.log('State after mutation:', JSON.stringify(state));
-  });
   
   app.use(store)
      .use(router)
