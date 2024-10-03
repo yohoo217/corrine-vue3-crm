@@ -64,7 +64,10 @@ export default {
         menuItems.push(
           { label: "預約課程", icon: "pi pi-fw pi-pencil", command: () => router.push("/booking") },
           { label: "個人資訊", icon: "pi pi-fw pi-user", command: () => router.push("/personal-info") },
-          { label: "登出", icon: "pi pi-fw pi-sign-out", command: () => store.dispatch('auth/logout') }
+          { label: "登出", icon: "pi pi-fw pi-sign-out", command: async () => {
+            await store.dispatch('auth/logout');
+            router.push('/');
+          }}
         );
       } 
       // 管理员状态
@@ -72,7 +75,10 @@ export default {
         menuItems.push(
           { label: "編輯課程", icon: "pi pi-fw pi-calendar", command: () => router.push("/courses") },
           { label: "CRM", icon: "pi pi-fw pi-users", command: () => router.push("/crm") },
-          { label: "登出", icon: "pi pi-fw pi-sign-out", command: () => store.dispatch('auth/logout') }
+          { label: "登出", icon: "pi pi-fw pi-sign-out", command: async () => {
+            await store.dispatch('auth/logout');
+            router.push('/');
+          }}
         );
       }
 
