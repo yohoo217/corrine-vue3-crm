@@ -1,11 +1,7 @@
 <template>
   <div class="booking-page" style="padding: 20px; background-color: #f0f0f0">
-    <p>Debug: BookingPage is rendering</p>
     <Toast />
     <h2>課程預約</h2>
-    <p>Debug: Courses count: {{ courses.length }}</p>
-    <p>Debug: Is loading: {{ $store.state.courses.isLoading }}</p>
-    <p>Debug: Error: {{ $store.state.courses.error }}</p>
     <div v-show="$store.state.courses.isLoading">正在加載課程資料...</div>
     <div v-show="$store.state.courses.error">
       加載課程時出錯: {{ $store.state.courses.error }}
@@ -45,6 +41,7 @@
           id="name"
           v-model.trim="booking.name"
           :class="{ 'p-invalid': v$.booking.name.$invalid && submitted }"
+          disabled
         />
         <small v-if="v$.booking.name.$invalid && submitted" class="p-error"
           >請輸入姓名</small
@@ -56,25 +53,11 @@
           id="email"
           v-model.trim="booking.email"
           :class="{ 'p-invalid': v$.booking.email.$invalid && submitted }"
+          disabled
         />
         <small v-if="v$.booking.email.$invalid && submitted" class="p-error"
           >請輸入有效的電子郵件地址</small
         >
-      </div>
-      <div class="p-field">
-        <label for="phone">電話</label>
-        <InputText
-          id="phone"
-          v-model.trim="booking.phone"
-          :class="{ 'p-invalid': v$.booking.phone.$invalid && submitted }"
-        />
-        <small v-if="v$.booking.phone.$invalid && submitted" class="p-error"
-          >請輸入有效的電話號碼</small
-        >
-      </div>
-      <div class="p-field">
-        <label for="customerId">客戶 ID（可選）</label>
-        <InputText id="customerId" v-model.trim="booking.customerId" />
       </div>
       <Button type="submit" label="預約" />
     </form>
@@ -91,6 +74,7 @@ import RadioButton from "primevue/radiobutton";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import Toast from "primevue/toast";
+import apiClient from '../api/config';
 
 export default {
   created() {
@@ -106,12 +90,41 @@ export default {
     const store = useStore();
     const toast = useToast();
 
+    const user = computed(() => store.state.auth.user);
+
     const booking = reactive({
       course: null,
       name: "",
       email: "",
-      phone: "",
-      customerId: "", // 添加客戶 ID 欄位
+    });
+
+    const fetchUserInfo = async () => {
+      try {
+        const response = await apiClient.get('/users/me', {
+          headers: {
+            Authorization: `Bearer ${store.state.auth.token}`,
+          },
+        });
+        const userData = response.data;
+        booking.name = userData.username;
+        booking.email = userData.email;
+      } catch (error) {
+        console.error('Failed to fetch user information:', error);
+        toast.add({
+          severity: 'error',
+          summary: '錯誤',
+          detail: '無法獲取用戶資料',
+          life: 3000
+        });
+      }
+    };
+
+    onMounted(() => {
+      fetchUserInfo();
+      if (courses.value.length === 0) {
+        console.log("Dispatching fetchCourses");
+        store.dispatch("courses/fetchCourses");
+      }
     });
 
     const rules = {
@@ -119,7 +132,6 @@ export default {
         course: { required },
         name: { required },
         email: { required, email },
-        phone: { required },
       },
     };
 
@@ -132,14 +144,6 @@ export default {
       return store.state.courses.list;
     });
 
-    onMounted(() => {
-      console.log("BookingPage mounted");
-      if (courses.value.length === 0) {
-        console.log("Dispatching fetchCourses");
-        store.dispatch("courses/fetchCourses");
-      }
-    });
-
     const onCourseChange = (course) => {
       console.log("Selected course:", course);
       booking.course = course.id;
@@ -149,37 +153,41 @@ export default {
       submitted.value = true;
       const isFormCorrect = await v$.value.$validate();
       if (isFormCorrect) {
-        try {
-          console.log("Submitting booking data:", booking);
-          // 構建 bookingData，確保欄位名稱與後端模型一致
-          const bookingData = {
-            course: booking.course, // 修改這裡
-            customer: {
-              name: booking.name,
-              email: booking.email,
-              phone: booking.phone,
-            },
-          };
-          if (booking.customerId && booking.customerId !== "") {
-            bookingData.customerId = booking.customerId;
-          }
-          console.log("Final booking data to submit:", bookingData);
-          await store.dispatch("bookings/createBooking", bookingData);
-          // 重置表單
-          booking.course = null;
-          booking.name = "";
-          booking.email = "";
-          booking.phone = "";
-          submitted.value = false;
-        } catch (error) {
-          console.error("Error details:", error);
+        if (!booking.course) {
           toast.add({
             severity: "error",
             summary: "錯誤",
-            detail:
-              "預約提交失敗: " +
-              (error.response?.data?.message || error.message),
-            life: 3000,
+            detail: "請選擇一個課程",
+            life: 3000
+          });
+          return;
+        }
+        try {
+          console.log("Submitting booking data:", booking);
+          const bookingData = {
+            course: booking.course,
+            name: booking.name,
+            email: booking.email
+          };
+          console.log("Final booking data to submit:", bookingData);
+          const response = await store.dispatch("bookings/createBooking", bookingData);
+          console.log("Booking creation response:", response);
+          // 重置表單
+          booking.course = null;
+          submitted.value = false;
+          toast.add({
+            severity: 'success',
+            summary: '成功',
+            detail: '預約已成功提交',
+            life: 3000
+          });
+        } catch (error) {
+          console.error("Error in submitBooking:", error);
+          toast.add({
+            severity: "error",
+            summary: "錯誤",
+            detail: "預約提交失敗: " + (error.response?.data?.details || error.message),
+            life: 3000
           });
         }
       }
@@ -192,6 +200,7 @@ export default {
       courses,
       onCourseChange,
       submitBooking,
+      user,
     };
   },
 };

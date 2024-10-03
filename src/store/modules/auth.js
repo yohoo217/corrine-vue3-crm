@@ -23,8 +23,14 @@ const actions = {
   login({ commit }, { token, role }) {
     commit('SET_TOKEN', { token, role }); // 更新状态为登录
   },
-  logout({ commit }) {
-    commit('CLEAR_TOKEN'); // 更新状态为未登录
+  async logout({ commit }) {
+    // 清除用戶數據和 token
+    commit('setUser', null);
+    commit('setToken', null);
+    localStorage.removeItem('token');
+    
+    // 這裡不進行路由導航,我們將在組件中處理
+    return true; // 表示登出成功
   },
 };
 

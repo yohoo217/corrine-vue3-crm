@@ -26,25 +26,32 @@ router.get('/user/email/:email', async (req, res) => {
 });
 
 // 創建新預約
-router.post('/book', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    // 確保 req.user 已經存在，這樣可以使用當前用戶資料
+    console.log('Received booking data:', req.body);
+    
+    // 檢查必要的字段是否存在
+    if (!req.body.course || !req.body.name || !req.body.email) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
     const newBooking = new Booking({
-      course: req.body.courseId,
-      customerId: req.user._id, // 使用當前使用者的 _id
+      course: req.body.course,
       customer: {
-        name: req.user.username,
-        email: req.user.email,
-        phone: req.user.phone || 'N/A',
+        name: req.body.name,
+        email: req.body.email
       },
-      date: req.body.date,
+      date: new Date()
     });
 
-    await newBooking.save();
-    res.status(201).json(newBooking);
+    console.log('New booking object:', newBooking);
+
+    const savedBooking = await newBooking.save();
+    console.log('Saved booking:', savedBooking);
+    res.status(201).json(savedBooking);
   } catch (error) {
-    console.error('Error creating booking:', error);
-    res.status(500).json({ error: 'Failed to book course' });
+    console.error('Booking creation error:', error);
+    res.status(500).json({ error: 'Failed to book course', details: error.message });
   }
 });
 
