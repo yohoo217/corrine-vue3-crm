@@ -63,21 +63,34 @@ export default {
 
 .header-section {
   width: 100%;
-  background: url('https://static.ottercdn.com/trek/media/df096fdf-e364-4633-8bac-55ffe2d8151f.jpg') no-repeat center center;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://static.ottercdn.com/trek/media/df096fdf-e364-4633-8bac-55ffe2d8151f.jpg') no-repeat center center;
   background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px;
-  margin-bottom: 20px;
+  height: 400px;
+  margin-bottom: 40px;
   position: relative;
 }
 
 .header-section h1 {
   color: white;
-  font-size: 3rem;
+  font-size: 4rem;
   font-weight: bold;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  letter-spacing: 2px;
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .courses-grid {
@@ -90,29 +103,58 @@ export default {
 
 .course-card {
   background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: none;
+  border-radius: 12px;
   text-align: center;
-  padding: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s;
-  cursor: pointer;
+  padding: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .course-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
 }
 
 .course-image {
   max-width: 100%;
-  height: auto;
+  height: 200px;
+  object-fit: cover;
   border-radius: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
+}
+
+.course-card:hover .course-image {
+  transform: scale(1.05);
 }
 
 .course-card h3 {
-  font-size: 1.2rem;
-  margin: 0;
+  font-size: 1.4rem;
+  margin: 0 0 10px;
   color: #333;
+  font-weight: 600;
+}
+
+.course-card p {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.course-card .btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.course-card .btn:hover {
+  background-color: #0056b3;
 }
 </style>

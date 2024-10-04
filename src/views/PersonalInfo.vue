@@ -1,33 +1,56 @@
 <template>
   <div class="personal-info">
-    <h2>個人資料</h2>
-    <div v-if="user">
-      <p><strong>姓名：</strong> {{ user.username }}</p>
-      <p><strong>電子郵件：</strong> {{ user.email }}</p>
+    <Toast />
+    <div class="p-card animated fadeInUp">
+      <h2 class="p-text-center">個人資料</h2>
+      <div v-if="user" class="p-fluid">
+        <div class="p-field animated fadeInLeft">
+          <label for="username">姓名</label>
+          <InputText id="username" v-model="user.username" disabled />
+        </div>
+        <div class="p-field animated fadeInRight">
+          <label for="email">電子郵件</label>
+          <InputText id="email" v-model="user.email" disabled />
+        </div>
 
-      <!-- 顯示用戶訂的課程 -->
-      <h3>已訂課程：</h3>
-      <ul v-if="bookings.length > 0">
-        <li v-for="booking in bookings" :key="booking._id">
-          課程名稱：{{ booking.course?.name }} 
-          (預約日期：{{ new Date(booking.date).toLocaleString() }})
-        </li>
-      </ul>
-      <p v-else>尚無預約課程。</p>
-    </div>
-    <div v-else>
-      <p>正在加載用戶資料...</p>
+        <h3 class="p-mt-4 animated fadeInUp">已訂課程</h3>
+        <DataTable :value="bookings" :paginator="true" :rows="5" 
+                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                   :rowsPerPageOptions="[5,10,20]" responsiveLayout="scroll"
+                   currentPageReportTemplate="顯示第 {first} 到第 {last} 筆，共 {totalRecords} 筆"
+                   class="animated fadeIn">
+          <Column field="course.name" header="課程名稱"></Column>
+          <Column field="date" header="預約日期">
+            <template #body="slotProps">
+              {{ new Date(slotProps.data.date).toLocaleString() }}
+            </template>
+          </Column>
+        </DataTable>
+      </div>
+      <ProgressSpinner v-else class="p-d-flex p-jc-center animated fadeIn" />
     </div>
   </div>
 </template>
 
 <script>
-import apiClient from '../api/config';
 import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
+import apiClient from '../api/config';
+import InputText from 'primevue/inputtext';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import ProgressSpinner from 'primevue/progressspinner';
+import Toast from 'primevue/toast';
 
 export default {
   name: 'PersonalInfo',
+  components: {
+    InputText,
+    DataTable,
+    Column,
+    ProgressSpinner,
+    Toast
+  },
   setup() {
     const store = useStore();
     const user = ref(null);
@@ -35,44 +58,72 @@ export default {
 
     const fetchUserInfo = async () => {
       try {
-        // 獲取用戶信息
         const response = await apiClient.get('/users/me', {
           headers: {
             Authorization: `Bearer ${store.state.auth.token}`,
           },
         });
         user.value = response.data;
-
-        // 使用用戶郵箱獲取預訂信息
-        if (user.value && user.value.email) {
-          const encodedEmail = encodeURIComponent(user.value.email);
-          const bookingResponse = await apiClient.get(`/bookings/user/email/${encodedEmail}`, {
-            headers: {
-              Authorization: `Bearer ${store.state.auth.token}`,
-            },
-          });
-          bookings.value = bookingResponse.data;
-          console.log('Fetched bookings:', bookings.value);
-        }
+        
+        // 獲取用戶的預約信息
+        const bookingsResponse = await apiClient.get(`/bookings/user/email/${user.value.email}`, {
+          headers: {
+            Authorization: `Bearer ${store.state.auth.token}`,
+          },
+        });
+        bookings.value = bookingsResponse.data;
       } catch (error) {
-        console.error('Failed to fetch user information or bookings:', error);
+        console.error('Failed to fetch user information:', error);
+        // 使用 Toast 顯示錯誤信息
       }
     };
 
-    onMounted(() => {
-      fetchUserInfo();
-    });
+    onMounted(fetchUserInfo);
 
     return {
       user,
-      bookings,
+      bookings
     };
-  },
+  }
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .personal-info {
-  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem;
+
+  .p-card {
+    width: 100%;
+    max-width: 800px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border-radius: 8px;
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 2rem;
+    }
+
+    .p-field {
+      margin-bottom: 1.5rem;
+    }
+
+    .p-inputtext:disabled {
+      opacity: 0.7;
+      background-color: #f4f4f4;
+    }
+
+    h3 {
+      color: #34495e;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+  }
 }
 </style>
