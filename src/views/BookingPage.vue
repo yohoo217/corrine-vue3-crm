@@ -1,66 +1,73 @@
 <template>
-  <div class="booking-page" style="padding: 20px; background-color: #f0f0f0">
+  <div class="booking-page">
     <Toast />
-    <h2>課程預約</h2>
-    <div v-show="$store.state.courses.isLoading">正在加載課程資料...</div>
-    <div v-show="$store.state.courses.error">
-      加載課程時出錯: {{ $store.state.courses.error }}
-    </div>
-    <form
-      v-show="!$store.state.courses.isLoading && !$store.state.courses.error"
-      @submit.prevent="submitBooking"
-      class="p-fluid"
-    >
-      <div class="p-field">
-        <label for="course">選擇課程</label>
-        <div v-if="courses.length === 0">沒有可用的課程</div>
-        <div
-          v-for="course in courses"
-          :key="course.id"
-          class="p-field-checkbox"
-        >
-          <RadioButton
-            :inputId="'course_' + course.id"
-            name="course"
-            :value="course.id"
-            v-model="booking.course"
-            @change="onCourseChange(course)"
-          />
-          <label :for="'course_' + course.id">
-            {{ course.name }} (ID: {{ course.id }})
-          </label>
+    <div class="p-d-flex p-jc-center">
+      <div class="p-card">
+        <h2 class="p-text-center">課程預約</h2>
+        <div v-show="$store.state.courses.isLoading" class="p-text-center">
+          <ProgressSpinner />
+          <p>正在加載課程資料...</p>
         </div>
-        <small v-if="v$.booking.course.$invalid && submitted" class="p-error"
-          >請選擇一個課程</small
+        <div v-show="$store.state.courses.error" class="p-error p-text-center">
+          加載課程時出錯: {{ $store.state.courses.error }}
+        </div>
+        <form
+          v-show="!$store.state.courses.isLoading && !$store.state.courses.error"
+          @submit.prevent="submitBooking"
+          class="p-fluid"
         >
-      </div>
+          <div class="p-field">
+            <label for="course">選擇課程</label>
+            <div v-if="courses.length === 0" class="p-text-center">沒有可用的課程</div>
+            <div
+              v-for="course in courses"
+              :key="course.id"
+              class="p-field-checkbox p-d-flex p-ai-center"
+            >
+              <RadioButton
+                :inputId="'course_' + course.id"
+                name="course"
+                :value="course.id"
+                v-model="booking.course"
+                @change="onCourseChange(course)"
+              />
+              <label :for="'course_' + course.id" class="p-ml-2">
+                {{ course.name }}
+              </label>
+            </div>
+            <small v-if="v$.booking.course.$invalid && submitted" class="p-error">
+              請選擇一個課程
+            </small>
+          </div>
 
-      <div class="p-field">
-        <label for="name">姓名</label>
-        <InputText
-          id="name"
-          v-model.trim="booking.name"
-          :class="{ 'p-invalid': v$.booking.name.$invalid && submitted }"
-          disabled
-        />
-        <small v-if="v$.booking.name.$invalid && submitted" class="p-error"
-          >請輸入姓名</small
-        >
+          <div class="p-field">
+            <label for="name">姓名</label>
+            <InputText
+              id="name"
+              v-model.trim="booking.name"
+              :class="{ 'p-invalid': v$.booking.name.$invalid && submitted }"
+              disabled
+            />
+            <small v-if="v$.booking.name.$invalid && submitted" class="p-error">
+              請輸入姓名
+            </small>
+          </div>
+          <div class="p-field">
+            <label for="email">電子郵件</label>
+            <InputText
+              id="email"
+              v-model.trim="booking.email"
+              :class="{ 'p-invalid': v$.booking.email.$invalid && submitted }"
+              disabled
+            />
+            <small v-if="v$.booking.email.$invalid && submitted" class="p-error">
+              請輸入有效的電子郵件地址
+            </small>
+          </div>
+          <Button type="submit" label="預約" class="p-button-raised p-button-rounded" />
+        </form>
       </div>
-      <div class="p-field">
-        <label for="email">電子郵件</label>
-        <InputText
-          id="email"
-          v-model.trim="booking.email"
-          :class="{ 'p-invalid': v$.booking.email.$invalid && submitted }"
-          disabled
-        />
-        <small v-if="v$.booking.email.$invalid && submitted" class="p-error"
-          >請輸入有效的電子郵件地址</small
-        >
-      </div>
-      <Button type="submit" label="預約" />
-    </form>
+    </div>
   </div>
 </template>
 
@@ -208,14 +215,73 @@ export default {
 
 <style scoped lang="scss">
 .booking-page {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.p-selectbutton {
+  background-image: url('https://static.ottercdn.com/trek/media/e8c56e9d-c85c-4e1a-bab4-76325433fd36.png');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+
+  .p-card {
+    max-width: 500px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  h2 {
+    color: #2c3e50;
+    margin-bottom: 2rem;
+  }
+
+  .p-field {
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .p-field:hover {
+    transform: translateX(5px);
+  }
+
+  .p-button {
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .p-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .p-inputtext:disabled {
+    opacity: 0.7;
+  }
+
+  .p-field-checkbox {
+    margin-bottom: 0.5rem;
+  }
 }
 </style>
