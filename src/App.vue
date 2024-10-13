@@ -15,18 +15,31 @@
       <SiteFooter />
       <Toast />
       <ConfirmDialog />
+
+      <!-- Login Dialog -->
+      <Dialog :visible="showLoginDialog" @hide="showLoginDialog = false">
+        <UserLogin @close="showLoginDialog = false" />
+      </Dialog>
+
+      <!-- Register Dialog -->
+      <Dialog :visible="showRegisterDialog" @hide="showRegisterDialog = false">
+        <UserRegister @close="showRegisterDialog = false" />
+      </Dialog>
     </ErrorBoundary>
   </div>
 </template>
 
 <script>
-import { computed, onMounted } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import Menubar from "primevue/menubar";
-import SiteFooter from './components/SiteFooter.vue';
+import SiteFooter from "./components/SiteFooter.vue";
 import Toast from "primevue/toast";
 import ConfirmDialog from "primevue/confirmdialog";
+import Dialog from "primevue/dialog";
+import UserLogin from "./views/UserLogin.vue";
+import UserRegister from "./views/UserRegister.vue";
 
 export default {
   name: "App",
@@ -35,61 +48,102 @@ export default {
     SiteFooter,
     Toast,
     ConfirmDialog,
+    Dialog,
+    UserLogin,
+    UserRegister,
   },
   setup() {
     const store = useStore();
     const router = useRouter();
+    const showLoginDialog = ref(false);
+    const showRegisterDialog = ref(false);
 
-    // 获取 Vuex 中的登录状态和角色
-    const isAuthenticated = computed(() => store.getters['auth/isAuthenticated']);
-    const userRole = computed(() => store.getters['auth/userRole']);
+    const isAuthenticated = computed(
+      () => store.getters["auth/isAuthenticated"]
+    );
+    const userRole = computed(() => store.getters["auth/userRole"]);
 
-    // 根据不同状态和角色设置菜单项
     const items = computed(() => {
       let menuItems = [
-        { label: "首頁", icon: "pi pi-fw pi-home", command: () => router.push("/") },
-        { label: "最新消息", icon: "pi pi-fw pi-info-circle", command: () => router.push("/news") },
-        { label: "課程資訊", icon: "pi pi-fw pi-info-circle", command: () => router.push("/course-info") },
+        {
+          label: "首頁",
+          icon: "pi pi-fw pi-home",
+          command: () => router.push("/"),
+        },
+        {
+          label: "最新消息",
+          icon: "pi pi-fw pi-info-circle",
+          command: () => router.push("/news"),
+        },
+        {
+          label: "課程資訊",
+          icon: "pi pi-fw pi-info-circle",
+          command: () => router.push("/course-info"),
+        },
       ];
 
-      // 未登录状态或为 guest 时，显示“登入”和“註冊”按钮
-      if (!isAuthenticated.value || userRole.value === 'guest') {
+      if (!isAuthenticated.value || userRole.value === "guest") {
         menuItems.push(
-          { label: "登入", icon: "pi pi-fw pi-sign-in", command: () => router.push("/login") },
-          { label: "註冊", icon: "pi pi-fw pi-user-plus", command: () => router.push("/register") }
+          {
+            label: "登入",
+            icon: "pi pi-fw pi-sign-in",
+            command: () => (showLoginDialog.value = true),
+          },
+          {
+            label: "註冊",
+            icon: "pi pi-fw pi-user-plus",
+            command: () => (showRegisterDialog.value = true),
+          }
         );
-      } 
-      // 普通用户状态
-      else if (userRole.value === 'user') {
+      } else if (userRole.value === "user") {
         menuItems.push(
-          { label: "預約課程", icon: "pi pi-fw pi-pencil", command: () => router.push("/booking") },
-          { label: "個人資訊", icon: "pi pi-fw pi-user", command: () => router.push("/personal-info") },
-          { label: "登出", icon: "pi pi-fw pi-sign-out", command: async () => {
-            await store.dispatch('auth/logout');
-            router.push('/');
-          }}
+          {
+            label: "預約課程",
+            icon: "pi pi-fw pi-pencil",
+            command: () => router.push("/booking"),
+          },
+          {
+            label: "個人資訊",
+            icon: "pi pi-fw pi-user",
+            command: () => router.push("/personal-info"),
+          },
+          {
+            label: "登出",
+            icon: "pi pi-fw pi-sign-out",
+            command: async () => {
+              await store.dispatch("auth/logout");
+              router.push("/");
+              window.location.reload(); // 加入這行來進行頁面重整
+            },
+          }
         );
-      } 
-      // 管理员状态
-      else if (userRole.value === 'admin') {
+      } else if (userRole.value === "admin") {
         menuItems.push(
-          { label: "編輯課程", icon: "pi pi-fw pi-calendar", command: () => router.push("/courses") },
-          { label: "CRM", icon: "pi pi-fw pi-users", command: () => router.push("/crm") },
-          { label: "登出", icon: "pi pi-fw pi-sign-out", command: async () => {
-            await store.dispatch('auth/logout');
-            router.push('/');
-          }}
+          {
+            label: "編輯課程",
+            icon: "pi pi-fw pi-calendar",
+            command: () => router.push("/courses"),
+          },
+          {
+            label: "CRM",
+            icon: "pi pi-fw pi-users",
+            command: () => router.push("/crm"),
+          },
+          {
+            label: "登出",
+            icon: "pi pi-fw pi-sign-out",
+            command: async () => {
+              await store.dispatch("auth/logout"); // 调用登出
+              router.push("/"); // 登出後重定向到首页
+            },
+          }
         );
       }
 
       return menuItems;
     });
 
-    onMounted(() => {
-      store.dispatch("courses/fetchCourses");
-    });
-
-    return { items };
+    return { items, showLoginDialog, showRegisterDialog };
   },
 };
 </script>
