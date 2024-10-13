@@ -201,4 +201,122 @@ export default {
 .crm {
   padding: 1rem;
 }
+
+.crm {
+  padding: 2rem;
+  background-color: #f4f4f9;
+  
+  h2 {
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .p-tabview-nav {
+    background-color: #007bff;
+    color: white;
+
+    .p-tabview-selected a {
+      background-color: #0056b3;
+      color: white;
+    }
+
+    a {
+      font-weight: bold;
+      color: white;
+    }
+  }
+
+  .p-datatable {
+    .p-datatable-header {
+      background-color: #f5f5f5;
+      padding: 1rem;
+
+      .p-input-icon-left {
+        width: 100%;
+        max-width: 300px;
+        input {
+          border-radius: 4px;
+          padding: 0.75rem;
+        }
+        i {
+          color: #ccc;
+        }
+      }
+    }
+
+    .p-column-header {
+      background-color: #e9ecef;
+      color: #495057;
+      font-weight: bold;
+    }
+
+    .p-datatable-tbody {
+      tr:hover {
+        background-color: #f1f1f1;
+      }
+    }
+  }
+
+  .p-button {
+    border-radius: 4px;
+    font-size: 0.875rem;
+
+    &.mr-2 {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .p-button-outlined {
+    border: 1px solid #007bff;
+    color: #007bff;
+    
+    &:hover {
+      background-color: #007bff;
+      color: white;
+    }
+  }
+
+  .p-button-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+
+    &:hover {
+      background-color: #dc3545;
+      color: white;
+    }
+  }
+
+  .p-dialog {
+    .p-dialog-header {
+      background-color: #007bff;
+      color: white;
+      font-size: 1.25rem;
+    }
+
+    .p-dialog-content {
+      padding-top: 1rem;
+    }
+
+    .p-dialog-footer {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 1rem;
+
+      .p-button-text {
+        font-weight: 600;
+      }
+    }
+  }
+
+  .p-chart {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
 </style>

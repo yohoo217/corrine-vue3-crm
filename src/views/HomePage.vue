@@ -11,7 +11,7 @@
         <img
           src="https://static.ottercdn.com/trek/media/e8c56e9d-c85c-4e1a-bab4-76325433fd36.png"
           alt="Tourism Japanese"
-          style="max-width: 100%; border-radius: 8px"
+          class="content-image"
         />
       </div>
       <div class="right-content">
@@ -44,7 +44,7 @@
         <img
           src="https://static.ottercdn.com/trek/media/e8c56e9d-c85c-4e1a-bab4-76325433fd36.png"
           alt="Tourism Japanese"
-          style="max-width: 100%; border-radius: 8px"
+          class="content-image"
         />
       </div>
     </section>
@@ -61,101 +61,107 @@ export default defineComponent({
 
 <style scoped>
 .home-page {
-  padding: 2rem;
+  padding: 0;
+  background-color: #f8f9fa;
+  font-family: 'Arial', sans-serif;
 }
 
 .introduction-1 {
   text-align: center;
-  margin-bottom: 2rem;
   background-image: url("https://static.ottercdn.com/trek/media/a6844ae0-502a-4abe-81d8-0535ad91dd7f.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  padding: 4rem 0; /* 調整內邊距 */
+  padding: 5rem 2rem;
+  color: #fff;
+  margin: 0;
 }
 
-.introduction-2 {
+.introduction-1 h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.introduction-1 p {
+  font-size: 1.2rem;
+}
+
+.introduction-2,
+.introduction-3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 2rem 0;
   padding: 2rem;
-  background: url("https://png.pngtree.com/background/20210709/original/pngtree-japan-zephyr-japanese-lucky-cat-picture-image_928602.jpg")
-    no-repeat center center; /* Replace with your background image */
   background-size: cover;
-  color: #333; /* Adjust text color for readability */
-  border-radius: 8px; /* Optional: Adds rounded corners */
+  color: #333;
+  margin: 0;
+}
+
+.introduction-2 {
+  background: url("https://png.pngtree.com/background/20210709/original/pngtree-japan-zephyr-japanese-lucky-cat-picture-image_928602.jpg")
+    no-repeat center center;
+  background-size: cover;
 }
 
 .introduction-2 .left-content {
   flex: 1;
-  max-width: 40%; /* Adjust width to balance layout */
+  max-width: 40%;
   padding: 1rem;
 }
 
 .introduction-2 .right-content {
   flex: 1;
-  max-width: 50%; /* Adjust width for the text content */
-  padding: 1rem;
-  background: rgba(
-    255,
-    255,
-    255,
-    0.8
-  ); /* Optional: Adds a white overlay for better readability */
-  border-radius: 8px;
+  max-width: 50%;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .introduction-2 h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+  color: #d32f2f;
 }
 
 .introduction-2 p {
-  line-height: 1.6;
-  margin-bottom: 1rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
 }
 
 .introduction-3 {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 2rem 0;
-  padding: 2rem;
   background: url("https://png.pngtree.com/thumb_back/fh260/back_our/20190617/ourmid/pngtree-pink-romantic-cherry-blossom-festival-travel-background-image_129806.jpg")
-    no-repeat center center; /* Replace with your background image */
+    no-repeat center center;
   background-size: cover;
-  color: #333; /* Adjust text color for readability */
-  border-radius: 8px; /* Optional: Adds rounded corners */
 }
 
 .introduction-3 .left-content {
   flex: 1;
-  max-width: 60%; /* Adjust width to balance layout */
+  max-width: 60%;
   padding: 2rem;
-  background: rgba(
-    255,
-    255,
-    255,
-    0.8
-  ); /* Optional: Adds a white overlay for better readability */
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .introduction-3 .right-content {
   flex: 1;
-  max-width: 40%; /* Adjust width for the text content */
+  max-width: 40%;
   padding: 1rem;
-  border-radius: 8px;
 }
 
 .introduction-3 h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+  color: #388e3c;
 }
 
 .introduction-3 p {
-  line-height: 1.6;
-  margin-bottom: 1rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
 }
 
+.content-image {
+  max-width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 </style>

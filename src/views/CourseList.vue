@@ -287,4 +287,173 @@ export default {
 
 <style scoped lang="scss">
 @import 'primeflex/primeflex.css'; 
+.course-list {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  
+  .card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+  }
+
+  h5 {
+    color: #444;
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .p-input-icon-left {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 1rem;
+
+    i {
+      color: #aaa;
+    }
+
+    input {
+      border-radius: 4px;
+    }
+  }
+
+  .p-column-title {
+    font-weight: bold;
+    color: #333;
+  }
+
+  .p-button {
+    border-radius: 4px;
+    font-size: 0.875rem;
+  }
+
+  .p-button-success {
+    background-color: #28a745;
+    border-color: #28a745;
+
+    &:hover {
+      background-color: #218838;
+      border-color: #1e7e34;
+    }
+  }
+
+  .p-button-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+
+    &:hover {
+      background-color: #c82333;
+      border-color: #bd2130;
+    }
+  }
+
+  .p-button-help {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+
+    &:hover {
+      background-color: #138496;
+      border-color: #117a8b;
+    }
+  }
+
+  .p-button-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+
+    &:hover {
+      background-color: #e0a800;
+      border-color: #d39e00;
+    }
+  }
+
+  .p-button-text {
+    color: #007bff;
+  }
+
+  .p-calendar {
+    input {
+      border-radius: 4px;
+    }
+  }
+
+  .p-dialog {
+    .p-dialog-header {
+      background-color: #007bff;
+      color: #fff;
+      font-size: 1.25rem;
+    }
+
+    .p-dialog-footer {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 1rem;
+    }
+
+    .p-button-text {
+      font-weight: 600;
+    }
+  }
+
+  .p-confirm-dialog {
+    .p-dialog-content {
+      font-size: 1rem;
+      color: #333;
+    }
+  }
+
+  .confirmation-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    i {
+      color: #dc3545;
+    }
+
+    span {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #333;
+    }
+  }
+
+  .p-inputtext {
+    border-radius: 4px;
+    padding: 0.75rem;
+  }
+
+  .p-toolbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+
+    .p-button {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .p-datatable {
+    .p-datatable-tbody tr {
+      &:hover {
+        background-color: #f1f1f1;
+      }
+    }
+
+    .p-datatable-thead th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+  }
+
+  .p-toast {
+    .p-toast-message {
+      font-size: 1rem;
+    }
+  }
+}
+
 </style>

@@ -24,29 +24,28 @@ export default {
         {
           _id: "66ae5d1359e9598a463be248",
           name: "旅遊日文班",
-          image: "https://static.ottercdn.com/trek/media/3ff9c4c0-797e-447f-9b9d-773378fb60b1.png", // URL for Travel Japanese
+          image: "https://static.ottercdn.com/trek/media/3ff9c4c0-797e-447f-9b9d-773378fb60b1.png",
         },
         {
           _id: "66ad08a4841e69a74ed3e4f2",
           name: "日文主題會話班",
-          image: "https://static.ottercdn.com/trek/media/e8c56e9d-c85c-4e1a-bab4-76325433fd36.png", // URL for Japanese Conversation Class
+          image: "https://static.ottercdn.com/trek/media/e8c56e9d-c85c-4e1a-bab4-76325433fd36.png",
         },
         {
           _id: "66ad0e5f405be3b46210760e",
           name: "日語家教",
-          image: "https://static.ottercdn.com/trek/media/a255e599-b72d-44b3-a777-dcac018662c0.png", // URL for Japanese Tutor
+          image: "https://static.ottercdn.com/trek/media/a255e599-b72d-44b3-a777-dcac018662c0.png",
         },
         {
           _id: "66ae5f68efe57d99fac184ae",
           name: "英語家教",
-          image: "https://static.ottercdn.com/trek/media/ad3a4121-f149-4edd-84b8-d506f82206e0.webp", // URL for English Tutor
+          image: "https://static.ottercdn.com/trek/media/ad3a4121-f149-4edd-84b8-d506f82206e0.webp",
         },
       ],
     };
   },
   methods: {
     goToCourseDetail(courseId) {
-      // 使用 _id 進行導航
       this.$router.push({ path: `/course/${courseId}` });
     },
   },
@@ -59,6 +58,8 @@ export default {
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  background-color: #f8f9fa;
+  font-family: 'Arial', sans-serif;
 }
 
 .header-section {
@@ -70,7 +71,6 @@ export default {
   align-items: center;
   height: 400px;
   margin-bottom: 40px;
-  position: relative;
 }
 
 .header-section h1 {
@@ -104,7 +104,6 @@ export default {
 .course-card {
   background: #fff;
   border: none;
-  border-radius: 12px;
   text-align: center;
   padding: 20px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
@@ -121,7 +120,6 @@ export default {
   max-width: 100%;
   height: 200px;
   object-fit: cover;
-  border-radius: 8px;
   margin-bottom: 15px;
   transition: transform 0.3s ease;
 }

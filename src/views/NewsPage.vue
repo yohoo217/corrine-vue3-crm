@@ -1,4 +1,3 @@
-<!-- src/views/NewsPage.vue -->
 <template>
   <div class="news-page">
     <!-- Header Section with Background Image and Title -->
@@ -71,6 +70,8 @@ export default {
 <style scoped>
 .news-page {
   padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa;
 }
 
 .header-section {
@@ -99,8 +100,13 @@ export default {
 
 .news-item {
   display: flex;
-  border-bottom: 1px dashed #ddd;
+  border-bottom: 1px solid #ddd;
   padding: 20px 0;
+  transition: background-color 0.3s;
+}
+
+.news-item:hover {
+  background-color: #f0f0f0;
 }
 
 .news-date {
