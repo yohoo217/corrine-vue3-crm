@@ -5,13 +5,12 @@ import CourseList from "@/views/CourseList.vue";
 import BookingPage from "@/views/BookingPage.vue";
 import CourseInfo from "../views/CourseInfo.vue";
 import CourseDetail from "../views/CourseDetail.vue";
-import NewsPage from '../views/NewsPage.vue';
-import UserLogin from '../views/UserLogin.vue';
-import UserRegister from '../views/UserRegister.vue';
+import NewsPage from "../views/NewsPage.vue";
+import UserLogin from "../views/UserLogin.vue";
+import UserRegister from "../views/UserRegister.vue";
 import CRM from "@/views/CRM.vue";
-import store from '../store';
-import PersonalInfo from '../views/PersonalInfo.vue';
-
+import store from "../store";
+import PersonalInfo from "../views/PersonalInfo.vue";
 
 const routes = [
   {
@@ -19,7 +18,7 @@ const routes = [
     name: "Home",
     component: HomePage,
   },
-  { path: '/personal-info', component: PersonalInfo }, // 添加个人资料页面的路由
+  { path: "/personal-info", component: PersonalInfo }, // 添加个人资料页面的路由
   {
     path: "/course-info",
     name: "CourseInfo",
@@ -35,19 +34,19 @@ const routes = [
     path: "/courses",
     name: "CourseList",
     component: CourseList,
-    meta: { requiresAuth: true, role: 'admin' }, // 仅 admin 可访问
+    meta: { requiresAuth: true, role: "admin" }, // 仅 admin 可访问
   },
   {
     path: "/booking",
     name: "Booking",
     component: BookingPage,
-    meta: { requiresAuth: true, role: 'user' }, // 仅普通用户可访问
+    meta: { requiresAuth: true, role: "user" }, // 仅普通用户可访问
   },
   {
     path: "/crm",
     name: "CRM",
     component: CRM,
-    meta: { requiresAuth: true, role: 'admin' }, // 仅 admin 可访问
+    meta: { requiresAuth: true, role: "admin" }, // 仅 admin 可访问
   },
   {
     path: "/news",
@@ -73,20 +72,25 @@ const router = createRouter({
 
 // 添加全局路由守卫
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = store.getters['auth/isAuthenticated'];
-  const userRole = store.getters['auth/userRole'];
+  const isAuthenticated = store.getters["auth/isAuthenticated"];
+  const userRole = store.getters["auth/userRole"];
 
-  // 检查是否需要身份验证
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/login'); // 如果未登录，跳转到登录页面
-  } 
-  // 检查是否需要特定角色
-  else if (to.meta.role && to.meta.role !== userRole) {
-    next('/'); // 如果角色不符合，跳转到首页或显示权限不足信息
-  } 
-  else {
-    next(); // 否则允许访问
+  // 如果目標路由是首頁，直接允許訪問
+  if (to.path === "/") {
+    return next();
   }
+
+  // 檢查是否需要身份驗證
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    return next("/login"); // 如果未登錄，跳轉到登錄頁面
+  }
+  // 檢查是否需要特定角色
+  else if (to.meta.role && to.meta.role !== userRole) {
+    return next("/"); // 如果角色不符合，跳轉到首頁或顯示權限不足信息
+  }
+
+  // 允許訪問
+  next();
 });
 
 export default router;
