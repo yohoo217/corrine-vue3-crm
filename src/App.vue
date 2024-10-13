@@ -10,6 +10,10 @@
             class="mr-2"
           />
         </template>
+        <!-- Right-aligned authentication buttons -->
+        <template #end>
+          <Menubar :model="authItems" />
+        </template>
       </Menubar>
       <router-view></router-view>
       <SiteFooter />
@@ -77,25 +81,28 @@ export default {
     );
     const userRole = computed(() => store.getters["auth/userRole"]);
 
-    const items = computed(() => {
-      let menuItems = [
-        {
-          label: "首頁",
-          icon: "pi pi-fw pi-home",
-          command: () => router.push("/"),
-        },
-        {
-          label: "最新消息",
-          icon: "pi pi-fw pi-info-circle",
-          command: () => router.push("/news"),
-        },
-        {
-          label: "課程資訊",
-          icon: "pi pi-fw pi-info-circle",
-          command: () => router.push("/course-info"),
-        },
-      ];
+    // 左側菜單項目
+    const items = computed(() => [
+      {
+        label: "首頁",
+        icon: "pi pi-fw pi-home",
+        command: () => router.push("/"),
+      },
+      {
+        label: "最新消息",
+        icon: "pi pi-fw pi-info-circle",
+        command: () => router.push("/news"),
+      },
+      {
+        label: "課程資訊",
+        icon: "pi pi-fw pi-info-circle",
+        command: () => router.push("/course-info"),
+      },
+    ]);
 
+    // 右側身份驗證項目
+    const authItems = computed(() => {
+      let menuItems = [];
       if (!isAuthenticated.value || userRole.value === "guest") {
         menuItems.push(
           {
@@ -109,50 +116,46 @@ export default {
             command: () => (showRegisterDialog.value = true),
           }
         );
-      } else if (userRole.value === "user") {
-        menuItems.push(
-          {
-            label: "預約課程",
-            icon: "pi pi-fw pi-pencil",
-            command: () => router.push("/booking"),
+      } else if (userRole.value === "user" || userRole.value === "admin") {
+        // 用戶和管理員的菜單項
+        const roleSpecificItems =
+          userRole.value === "user"
+            ? [
+                {
+                  label: "預約課程",
+                  icon: "pi pi-fw pi-pencil",
+                  command: () => router.push("/booking"),
+                },
+                {
+                  label: "個人資訊",
+                  icon: "pi pi-fw pi-user",
+                  command: () => router.push("/personal-info"),
+                },
+              ]
+            : [
+                {
+                  label: "編輯課程",
+                  icon: "pi pi-fw pi-calendar",
+                  command: () => router.push("/courses"),
+                },
+                {
+                  label: "CRM",
+                  icon: "pi pi-fw pi-users",
+                  command: () => router.push("/crm"),
+                },
+              ];
+
+        menuItems.push(...roleSpecificItems);
+
+        // 添加登出選項
+        menuItems.push({
+          label: "登出",
+          icon: "pi pi-fw pi-sign-out",
+          command: async () => {
+            await store.dispatch("auth/logout");
+            // 登出後的路由跳轉現在由 Vuex action 處理
           },
-          {
-            label: "個人資訊",
-            icon: "pi pi-fw pi-user",
-            command: () => router.push("/personal-info"),
-          },
-          {
-            label: "登出",
-            icon: "pi pi-fw pi-sign-out",
-            command: async () => {
-              await store.dispatch("auth/logout");
-              router.push("/");
-              window.location.reload(); // 登出後進行頁面重整
-            },
-          }
-        );
-      } else if (userRole.value === "admin") {
-        menuItems.push(
-          {
-            label: "編輯課程",
-            icon: "pi pi-fw pi-calendar",
-            command: () => router.push("/courses"),
-          },
-          {
-            label: "CRM",
-            icon: "pi pi-fw pi-users",
-            command: () => router.push("/crm"),
-          },
-          {
-            label: "登出",
-            icon: "pi pi-fw pi-sign-out",
-            command: async () => {
-              await store.dispatch("auth/logout");
-              router.push("/");
-              window.location.reload(); // 登出後進行頁面重整
-            },
-          }
-        );
+        });
       }
 
       return menuItems;
@@ -160,10 +163,11 @@ export default {
 
     return {
       items,
+      authItems,
       showLoginDialog,
       showRegisterDialog,
       closeLoginDialog,
-      closeRegisterDialog, // 關閉彈窗函數
+      closeRegisterDialog,
     };
   },
 };
