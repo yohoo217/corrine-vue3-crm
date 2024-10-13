@@ -1,4 +1,3 @@
-// src/views/UserRegister.vue
 <template>
     <div>
       <h2>註冊</h2>
