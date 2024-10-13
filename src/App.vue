@@ -17,13 +17,13 @@
       <ConfirmDialog />
 
       <!-- Login Dialog -->
-      <Dialog :visible="showLoginDialog" @hide="showLoginDialog = false">
-        <UserLogin @close="showLoginDialog = false" />
+      <Dialog v-model:visible="showLoginDialog">
+        <UserLogin @close="closeLoginDialog" />
       </Dialog>
 
       <!-- Register Dialog -->
-      <Dialog :visible="showRegisterDialog" @hide="showRegisterDialog = false">
-        <UserRegister @close="showRegisterDialog = false" />
+      <Dialog v-model:visible="showRegisterDialog">
+        <UserRegister @close="closeRegisterDialog" />
       </Dialog>
     </ErrorBoundary>
   </div>
@@ -57,6 +57,20 @@ export default {
     const router = useRouter();
     const showLoginDialog = ref(false);
     const showRegisterDialog = ref(false);
+
+    // 關閉登入彈窗
+    const closeLoginDialog = () => {
+      setTimeout(() => {
+        showLoginDialog.value = false;
+      }, 0);
+    };
+
+    // 關閉註冊彈窗
+    const closeRegisterDialog = () => {
+      setTimeout(() => {
+        showRegisterDialog.value = false;
+      }, 0);
+    };
 
     const isAuthenticated = computed(
       () => store.getters["auth/isAuthenticated"]
@@ -113,7 +127,7 @@ export default {
             command: async () => {
               await store.dispatch("auth/logout");
               router.push("/");
-              window.location.reload(); // 加入這行來進行頁面重整
+              window.location.reload(); // 登出後進行頁面重整
             },
           }
         );
@@ -133,8 +147,9 @@ export default {
             label: "登出",
             icon: "pi pi-fw pi-sign-out",
             command: async () => {
-              await store.dispatch("auth/logout"); // 调用登出
-              router.push("/"); // 登出後重定向到首页
+              await store.dispatch("auth/logout");
+              router.push("/");
+              window.location.reload(); // 登出後進行頁面重整
             },
           }
         );
@@ -143,7 +158,13 @@ export default {
       return menuItems;
     });
 
-    return { items, showLoginDialog, showRegisterDialog };
+    return {
+      items,
+      showLoginDialog,
+      showRegisterDialog,
+      closeLoginDialog,
+      closeRegisterDialog, // 關閉彈窗函數
+    };
   },
 };
 </script>
