@@ -1,3 +1,4 @@
+// src/views/UserRegister.vue
 <template>
     <div>
       <h2>註冊</h2>
@@ -10,15 +11,15 @@
     </div>
   </template>
   
-  <script>
+<script>
 import apiClient from '../api/config';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
-
 export default {
   name: 'UserRegister',
-  setup() {
+  props: ['onClose'], // 接收父組件傳遞的關閉方法
+  setup(props) {
     const router = useRouter();
 
     const username = ref('');
@@ -33,6 +34,7 @@ export default {
           password: password.value,
         });
         alert('註冊成功，請登入');
+        props.onClose(); // 註冊成功後關閉 popup
         router.push('/login');
       } catch (error) {
         alert(error.response.data.error);
