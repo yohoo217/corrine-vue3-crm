@@ -1,3 +1,4 @@
+//server/server.js
 require('dotenv').config();
 
 const express = require('express');
@@ -36,6 +37,9 @@ app.use('/api/bookings', require('./routes/bookings'));
 app.get('/api/test', (req, res) => {
   res.json({ message: 'Server is running' });
 });
+
+app.use('/api/payment', require('./routes/payment')); // 使用支付路由，與其他路由一致
+
 
 // MongoDB 連接
 const MONGODB_URI = process.env.MONGODB_URI;
