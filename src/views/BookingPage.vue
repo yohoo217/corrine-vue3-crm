@@ -12,13 +12,17 @@
           加載課程時出錯: {{ $store.state.courses.error }}
         </div>
         <form
-          v-show="!$store.state.courses.isLoading && !$store.state.courses.error"
+          v-show="
+            !$store.state.courses.isLoading && !$store.state.courses.error
+          "
           @submit.prevent="submitBooking"
           class="p-fluid"
         >
           <div class="p-field">
             <label for="course">選擇課程</label>
-            <div v-if="courses.length === 0" class="p-text-center">沒有可用的課程</div>
+            <div v-if="courses.length === 0" class="p-text-center">
+              沒有可用的課程
+            </div>
             <div
               v-for="course in courses"
               :key="course.id"
@@ -35,7 +39,10 @@
                 {{ course.name }}
               </label>
             </div>
-            <small v-if="v$.booking.course.$invalid && submitted" class="p-error">
+            <small
+              v-if="v$.booking.course.$invalid && submitted"
+              class="p-error"
+            >
               請選擇一個課程
             </small>
           </div>
@@ -60,11 +67,18 @@
               :class="{ 'p-invalid': v$.booking.email.$invalid && submitted }"
               disabled
             />
-            <small v-if="v$.booking.email.$invalid && submitted" class="p-error">
+            <small
+              v-if="v$.booking.email.$invalid && submitted"
+              class="p-error"
+            >
               請輸入有效的電子郵件地址
             </small>
           </div>
-          <Button type="submit" label="預約" class="p-button-raised p-button-rounded" />
+          <Button
+            type="submit"
+            label="預約"
+            class="p-button-raised p-button-rounded"
+          />
         </form>
       </div>
     </div>
@@ -81,7 +95,7 @@ import RadioButton from "primevue/radiobutton";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import Toast from "primevue/toast";
-import apiClient from '../api/config';
+import apiClient from "../api/config";
 
 export default {
   created() {
@@ -107,7 +121,7 @@ export default {
 
     const fetchUserInfo = async () => {
       try {
-        const response = await apiClient.get('/users/me', {
+        const response = await apiClient.get("/users/me", {
           headers: {
             Authorization: `Bearer ${store.state.auth.token}`,
           },
@@ -116,12 +130,12 @@ export default {
         booking.name = userData.username;
         booking.email = userData.email;
       } catch (error) {
-        console.error('Failed to fetch user information:', error);
+        console.error("Failed to fetch user information:", error);
         toast.add({
-          severity: 'error',
-          summary: '錯誤',
-          detail: '無法獲取用戶資料',
-          life: 3000
+          severity: "error",
+          summary: "錯誤",
+          detail: "無法獲取用戶資料",
+          life: 3000,
         });
       }
     };
@@ -165,36 +179,65 @@ export default {
             severity: "error",
             summary: "錯誤",
             detail: "請選擇一個課程",
-            life: 3000
+            life: 3000,
           });
           return;
         }
         try {
           console.log("Submitting booking data:", booking);
+
+          // 根據選擇的課程 ID 獲取課程詳細資訊
+          const selectedCourse = courses.value.find(
+            (course) => course._id === booking.course
+          );
+          if (!selectedCourse) {
+            throw new Error("選擇的課程不存在");
+          }
+
           const bookingData = {
             course: booking.course,
             name: booking.name,
-            email: booking.email
+            email: booking.email,
           };
-          console.log("Final booking data to submit:", bookingData);
-          const response = await store.dispatch("bookings/createBooking", bookingData);
+
+          // 提交預約
+          const response = await store.dispatch(
+            "bookings/createBooking",
+            bookingData
+          );
           console.log("Booking creation response:", response);
+
+          // 預約成功後觸發支付流程，並傳遞課程的價格和產品名稱
+          const paymentResponse = await apiClient.post(`/payment/pay`, {
+            courseId: selectedCourse._id,
+            price: selectedCourse.price,
+            itemName: selectedCourse.name,
+          });
+
+          // 將返回的 HTML 表單插入頁面並提交
+          const paymentFormContainer = document.createElement("div");
+          paymentFormContainer.innerHTML = paymentResponse.data;
+          document.body.appendChild(paymentFormContainer);
+          paymentFormContainer.querySelector("form").submit();
+
           // 重置表單
           booking.course = null;
           submitted.value = false;
           toast.add({
-            severity: 'success',
-            summary: '成功',
-            detail: '預約已成功提交',
-            life: 3000
+            severity: "success",
+            summary: "成功",
+            detail: "預約已成功提交，正在跳轉支付頁面",
+            life: 3000,
           });
         } catch (error) {
           console.error("Error in submitBooking:", error);
           toast.add({
             severity: "error",
             summary: "錯誤",
-            detail: "預約提交失敗: " + (error.response?.data?.details || error.message),
-            life: 3000
+            detail:
+              "預約提交失敗: " +
+              (error.response?.data?.details || error.message),
+            life: 3000,
           });
         }
       }
@@ -215,7 +258,7 @@ export default {
 
 <style scoped lang="scss">
 .booking-page {
-  background-image: url('https://static.ottercdn.com/trek/media/e8c56e9d-c85c-4e1a-bab4-76325433fd36.png');
+  background-image: url("https://static.ottercdn.com/trek/media/e8c56e9d-c85c-4e1a-bab4-76325433fd36.png");
   background-size: cover;
   background-position: center;
   min-height: 100vh;
