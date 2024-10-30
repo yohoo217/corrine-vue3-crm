@@ -18,7 +18,9 @@ const options = {
   IsProjectContractor: false,
 };
 
-router.get('/pay', (req, res) => {
+router.post('/pay', (req, res) => { // 確保這裡是 `POST` 方法
+  const { price, itemName } = req.body;
+
   const MerchantTradeDate = new Date().toLocaleString('zh-TW', {
     year: 'numeric',
     month: '2-digit',
@@ -34,9 +36,9 @@ router.get('/pay', (req, res) => {
   let base_param = {
     MerchantTradeNo: TradeNo,
     MerchantTradeDate,
-    TotalAmount: '100',
-    TradeDesc: '測試交易描述',
-    ItemName: '測試商品等',
+    TotalAmount: price, // 使用前端傳遞的價格
+    TradeDesc: '課程預約支付',
+    ItemName: itemName, // 使用前端傳遞的課程名稱
     ReturnURL: `${HOST}/api/payment/return`, // 綠界的回傳 URL
     ClientBackURL: `${HOST}/api/payment/clientReturn`, // 用戶完成交易後的返回 URL
   };
