@@ -9,6 +9,7 @@
           <th>客戶 Email</th>
           <th>課程名稱</th>
           <th>訂單日期</th>
+          <th>付款狀態</th> <!-- 新增的欄位 -->
         </tr>
       </thead>
       <tbody>
@@ -18,6 +19,7 @@
           <td>{{ order.customer.email }}</td>
           <td>{{ order.course.name }}</td>
           <td>{{ new Date(order.date).toLocaleString() }}</td>
+          <td>{{ order.paymentStatus }}</td> <!-- 顯示付款狀態 -->
         </tr>
       </tbody>
     </table>

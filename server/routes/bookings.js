@@ -37,13 +37,13 @@ router.get('/admin/orders', authMiddleware, isAdmin, async (req, res) => {
       return res.status(404).json({ message: 'No bookings found' });
     }
 
-    console.log('Admin fetched all bookings:', bookings);
     res.json(bookings);
   } catch (err) {
     console.error('Error fetching all bookings:', err);
     res.status(500).json({ message: 'Error fetching bookings', error: err.message });
   }
 });
+
 
 // 創建新預約
 router.post('/', async (req, res) => {
@@ -61,7 +61,8 @@ router.post('/', async (req, res) => {
         name: req.body.name,
         email: req.body.email
       },
-      date: new Date()
+      date: new Date(),
+      paymentStatus: req.body.paymentStatus || '未付款', // 新增這一行
     });
 
     console.log('New booking object:', newBooking);

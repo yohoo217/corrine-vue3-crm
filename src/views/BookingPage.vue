@@ -200,21 +200,22 @@ export default {
             email: booking.email,
           };
 
-          // 提交預約
-          const response = await store.dispatch(
-            "bookings/createBooking",
+          // 1. 創建預約，獲取 bookingId
+          const bookingResponse = await apiClient.post(
+            "/bookings",
             bookingData
           );
-          console.log("Booking creation response:", response);
+          const bookingId = bookingResponse.data._id;
+          console.log("Booking created with ID:", bookingId);
 
-          // 預約成功後觸發支付流程，並傳遞課程的價格和產品名稱
-          const paymentResponse = await apiClient.post(`/payment/pay`, {
-            courseId: selectedCourse._id,
+          // 2. 發起支付請求，傳遞 bookingId
+          const paymentResponse = await apiClient.post("/payment/pay", {
             price: selectedCourse.price,
             itemName: selectedCourse.name,
+            bookingId, // 傳遞 bookingId
           });
 
-          // 將返回的 HTML 表單插入頁面並提交
+          // 3. 顯示支付頁面
           const paymentFormContainer = document.createElement("div");
           paymentFormContainer.innerHTML = paymentResponse.data;
           document.body.appendChild(paymentFormContainer);
