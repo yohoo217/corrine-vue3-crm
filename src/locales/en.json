@@ -1,0 +1,15 @@
+{
+  "home": {
+    "title": "Home",
+    "welcome_message": "Let's see the world through linguistic and cultural perspectives!",
+    "course_name": "Tourism Japanese",
+    "course_description": "Reading thousands of books is not as good as traveling thousands of miles. Let us help you experience it in practice! Culture is the beginning of encountering differences. Language will be the key to unlocking conversations. Travel is the path to experience everything. Thematic learning helps you prepare for common scenarios during travel. Prepare your language knowledge and practice how to think and respond through interactive exercises."
+  },
+  "booking": "Booking",
+  "course": "Course",
+  "login": "Login",
+  "register": "Register",
+  "footer": {
+    "copyright": "Copyright © 2024 Corrine's Language Cafe. All rights reserved."
+  }
+}
