@@ -62,7 +62,7 @@ router.post('/', async (req, res) => {
         email: req.body.email
       },
       date: new Date(),
-      paymentStatus: req.body.paymentStatus || '未付款', // 新增這一行
+      paymentStatus: req.body.paymentStatus || 'pending', // 新增這一行
     });
 
     console.log('New booking object:', newBooking);
