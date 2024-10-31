@@ -15,12 +15,23 @@
         </a>
       </div>
     </div>
+    <select @change="changeLanguage($event)">
+      <option value="zh">中文</option>
+      <option value="en">English</option>
+    </select>
   </footer>
 </template>
 
 <script>
 export default {
   name: 'SiteFooter', // 修改組件名稱為多字詞
+  methods: {
+    changeLanguage(event) {
+      const selectedLanguage = event.target.value;
+      this.$i18n.locale = selectedLanguage; // 設置 i18n 的語言
+      localStorage.setItem('language', selectedLanguage); // 保存語言到 localStorage
+    }
+  }
 };
 </script>
 

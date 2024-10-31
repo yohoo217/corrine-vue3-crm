@@ -2,8 +2,8 @@
   <div class="home-page">
     <!-- 教室介绍 -->
     <section class="introduction-1">
-      <h1>讓我們一起用語言和文化的濾鏡看世界</h1>
-      <p>Let's see the world through linguistic and cultural perspectives!</p>
+      <h1>{{ $t('home.welcome_message') }}</h1>
+      <p>{{ $t('home.course_description') }}</p>
     </section>
 
     <section class="introduction-2">
