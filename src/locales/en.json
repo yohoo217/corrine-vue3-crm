@@ -3,13 +3,12 @@
     "title": "Home",
     "welcome_message": "Let's see the world through linguistic and cultural perspectives!",
     "course_name": "Tourism Japanese",
-    "course_description": "Reading thousands of books is not as good as traveling thousands of miles. Let us help you experience it in practice! Culture is the beginning of encountering differences. Language will be the key to unlocking conversations. Travel is the path to experience everything. Thematic learning helps you prepare for common scenarios during travel. Prepare your language knowledge and practice how to think and respond through interactive exercises."
+    "course_description": "Reading thousands of books is not as good as traveling thousands of miles. Let us help you experience it in practice! Culture is the beginning of encountering differences. Language will be the key to unlocking conversations. Travel is the path to experience everything. Thematic learning helps you prepare for common scenarios during travel. Prepare your language knowledge and practice how to think and respond through interactive exercises.",
+    "theme_conversation_class": "Practical Thematic Conversation Class",
+    "theme_class_description": "- Practical Thematic Conversation Class: Led by Japanese teachers, enjoy the joy of conversation and interaction through extensive listening and speaking practice in real-life situations! - Basic Grammar Foundation Class: Start from the basics to understand Japanese language knowledge and grammar structure, with solid training in listening, speaking, reading, and writing so you can speak out and enjoy the intricacies of reading and writing. - Multilingual Cafe: Regular online and in-person exchange activities where you can experience diverse input and output practices through interaction with foreign teachers, native speakers, and language learners. - Whether you're a beginner or have some foundation, we can help you enhance your Japanese skills in a relaxed and enjoyable environment, letting you enjoy the learning process and experience the joy of Japanese communication."
   },
   "booking": "Booking",
   "course": "Course",
   "login": "Login",
-  "register": "Register",
-  "footer": {
-    "copyright": "Copyright © 2024 Corrine's Language Cafe. All rights reserved."
-  }
+  "register": "Register"
 }

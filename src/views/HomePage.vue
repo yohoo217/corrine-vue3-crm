@@ -1,6 +1,6 @@
 <template>
   <div class="home-page">
-    <!-- 教室介绍 -->
+    <!-- 教室介紹 -->
     <section class="introduction-1">
       <h1>{{ $t('home.welcome_message') }}</h1>
       <p>{{ $t('home.course_description') }}</p>
@@ -10,40 +10,25 @@
       <div class="left-content">
         <img
           src="https://static.ottercdn.com/trek/media/e8c56e9d-c85c-4e1a-bab4-76325433fd36.png"
-          alt="Tourism Japanese"
+          :alt="$t('home.course_name')"
           class="content-image"
         />
       </div>
       <div class="right-content">
-        <h1>旅遊日語班</h1>
-        <p>
-          讀萬卷書不如行萬里路，讓我們幫助你身體力行吧!<br />
-          文化，即是遇見差異的開始。<br />
-          語言，將是開啟對話的鑰匙。<br />
-          旅行，則是體驗一切的道路。<br />
-          精心設計的主題式學習，讓你可以預習旅行中常見的場景。<br />
-          準備言語知識，並透過互動實際練習如何思考及應對。
-        </p>
+        <h1>{{ $t('home.course_name') }}</h1>
+        <p>{{ $t('home.course_description') }}</p>
       </div>
     </section>
 
     <section class="introduction-3">
       <div class="left-content">
-        <h1>
-          主題會話實用班<br />
-          基礎文法打底班
-        </h1>
-        <p>
-          - 主題會話實用班：由日籍老師帶領，透過大量的聽說練習和生活化的情境理解享受對話和互動的樂趣！<br />
-          - 基礎文法打底版：從基礎開始認識日語的言語知識和法結構，兼具聽說讀寫的紮實訓練讓你能夠開口，也能感受閱讀和書寫的奧妙。<br />
-          - 多語咖啡：不定期舉辦線上和實體交流活動，透過與外籍老師、母語者和語言學習者間的互動體驗多樣化的輸出和輸入練習。<br />
-          - 無論您是初學者還是有一定基礎，我們都能幫助您在輕鬆有趣的環境中提升日語能力讓您享受學習過程，體驗用日語交流的快樂。
-        </p>
+        <h1>{{ $t('home.theme_conversation_class') }}</h1>
+        <p>{{ $t('home.theme_class_description') }}</p>
       </div>
       <div class="right-content">
         <img
           src="https://static.ottercdn.com/trek/media/e8c56e9d-c85c-4e1a-bab4-76325433fd36.png"
-          alt="Tourism Japanese"
+          :alt="$t('home.course_name')"
           class="content-image"
         />
       </div>
