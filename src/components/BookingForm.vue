@@ -42,8 +42,6 @@
 </template>
 
 <script>
-import { useVuelidate } from '@vuelidate/core'
-import { required, email } from '@vuelidate/validators'
 import { ref, onMounted, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import Dropdown from 'primevue/dropdown';

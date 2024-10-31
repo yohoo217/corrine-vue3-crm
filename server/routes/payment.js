@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const ecpay_payment = require('ecpay_aio_nodejs');
+const Booking = require("../models/Booking"); // Booking 模型
 require('dotenv').config();
 
 const { MERCHANTID, HASHKEY, HASHIV, HOST } = process.env;
@@ -19,7 +20,7 @@ const options = {
 };
 
 router.post('/pay', (req, res) => { // 確保這裡是 `POST` 方法
-  const { price, itemName } = req.body;
+  const { price, itemName, bookingId } = req.body;
 
   const MerchantTradeDate = new Date().toLocaleString('zh-TW', {
     year: 'numeric',
@@ -41,6 +42,7 @@ router.post('/pay', (req, res) => { // 確保這裡是 `POST` 方法
     ItemName: itemName, // 使用前端傳遞的課程名稱
     ReturnURL: `${HOST}/api/payment/return`, // 綠界的回傳 URL
     ClientBackURL: `${HOST}/api/payment/clientReturn`, // 用戶完成交易後的返回 URL
+    CustomField1: bookingId, // 傳遞 bookingId
   };
   
   const create = new ecpay_payment(options);
@@ -59,11 +61,20 @@ router.post('/return', async (req, res) => {
 
   if (CheckMacValue === checkValue) {
     console.log('交易驗證成功');
+
+    // 獲取 bookingId 並更新付款狀態
+    const bookingId = req.body.CustomField1;
+    try {
+      await Booking.findByIdAndUpdate(bookingId, { paymentStatus: 'paid' });
+      console.log('訂單付款狀態已更新');
+    } catch (err) {
+      console.error('更新付款狀態時出錯:', err);
+    }
   } else {
     console.log('交易驗證失敗');
   }
 
-  res.send('1|OK'); // 回傳給綠界確認成功
+  res.send('1|OK');
 });
 
 router.get('/clientReturn', (req, res) => {
