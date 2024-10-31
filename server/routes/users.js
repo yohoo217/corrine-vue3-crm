@@ -45,7 +45,7 @@ router.post("/login", async (req, res) => {
 
 router.get('/me', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user).select('-password'); // 排除密码字段
+    const user = await User.findById(req.user.id).select('-password'); // 排除密碼字段
     if (!user) return res.status(404).json({ message: 'User not found' });
     res.json(user);
   } catch (error) {

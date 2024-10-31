@@ -1,16 +1,21 @@
 // middleware/auth.js
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const auth = (req, res, next) => {
-  const token = req.header('Authorization');
-  if (!token) return res.status(401).json({ message: 'No token, authorization denied' });
+  const token = req.header("Authorization");
+  if (!token) return res.status(401).json({ message: "No token, authorization denied" });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.id; // 根据您在生成 token 时的 payload 调整
+    const tokenWithoutBearer = token.startsWith("Bearer ") ? token.slice(7).trim() : token;
+    const decoded = jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET);
+    
+    // 確認 decoded 是否包含 id 和 role
+    console.log("Decoded Token:", decoded); // 添加這行以檢查解碼的結果
+    req.user = decoded;
+
     next();
   } catch (err) {
-    res.status(401).json({ message: 'Token is not valid' });
+    res.status(401).json({ message: "Token is not valid" });
   }
 };
 

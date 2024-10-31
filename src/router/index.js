@@ -63,6 +63,12 @@ const routes = [
     name: "Register",
     component: UserRegister,
   },
+  {
+    path: "/admin/orders",
+    name: "AdminOrders",
+    component: () => import("@/views/AdminOrders.vue"),
+    meta: { requiresAuth: true, requiresAdmin: true },
+  }  
 ];
 
 const router = createRouter({

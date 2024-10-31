@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema({
   isAdmin: { type: Boolean, default: false }, // 使用 isAdmin 判断角色
 });
 
+
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   try {
