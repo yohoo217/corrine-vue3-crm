@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <ErrorBoundary>
-      <Menubar :model="items">
+      <Menubar :model="items" class="menubar">
         <template #start>
           <img
             alt="Logo"
@@ -10,9 +10,15 @@
             class="mr-2"
           />
         </template>
-        <!-- Right-aligned authentication buttons -->
+        <!-- Right-aligned authentication buttons and language selector -->
         <template #end>
-          <Menubar :model="authItems" />
+          <div class="auth-and-lang">
+            <Menubar :model="authItems" class="auth-items" />
+            <select @change="changeLanguage($event)" :value="currentLocale" class="language-selector">
+              <option value="zh">中文</option>
+              <option value="en">English</option>
+            </select>
+          </div>
         </template>
       </Menubar>
       <router-view></router-view>
@@ -34,7 +40,7 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import Menubar from "primevue/menubar";
@@ -44,6 +50,7 @@ import ConfirmDialog from "primevue/confirmdialog";
 import Dialog from "primevue/dialog";
 import UserLogin from "./views/UserLogin.vue";
 import UserRegister from "./views/UserRegister.vue";
+import { useI18n } from 'vue-i18n'; // 引入 i18n
 
 export default {
   name: "App",
@@ -59,6 +66,8 @@ export default {
   setup() {
     const store = useStore();
     const router = useRouter();
+    const { locale } = useI18n(); // 使用 i18n 的 locale
+
     const showLoginDialog = ref(false);
     const showRegisterDialog = ref(false);
 
@@ -76,7 +85,7 @@ export default {
     const isAuthenticated = computed(() => store.getters["auth/isAuthenticated"]);
     const userRole = computed(() => store.getters["auth/userRole"]);
 
-    // Left-side menu items
+    // 左側菜單項目
     const items = computed(() => [
       {
         label: "首頁",
@@ -95,7 +104,7 @@ export default {
       },
     ]);
 
-    // Right-side authentication items
+    // 右側認證菜單項目
     const authItems = computed(() => {
       const menuItems = [];
 
@@ -126,18 +135,34 @@ export default {
           );
         }
 
-        // Add logout option for authenticated users
+        // 添加登出選項給已認證用戶
         menuItems.push({
           label: "登出",
           icon: "pi pi-fw pi-sign-out",
           command: async () => {
             await store.dispatch("auth/logout");
-            router.push("/"); // Redirect after logout
+            router.push("/"); // 登出後重定向
           },
         });
       }
 
       return menuItems;
+    });
+
+    // 當前語言
+    const currentLocale = ref(localStorage.getItem('language') || 'zh');
+
+    // 語言切換方法
+    const changeLanguage = (event) => {
+      const selectedLanguage = event.target.value;
+      locale.value = selectedLanguage; // 更新 i18n 的語言
+      localStorage.setItem('language', selectedLanguage); // 保存語言到 localStorage
+      currentLocale.value = selectedLanguage; // 更新當前語言狀態
+    };
+
+    // 監聽當前語言改變，並保持 localStorage 更新
+    watch(locale, (newLocale) => {
+      localStorage.setItem('language', newLocale);
     });
 
     return {
@@ -147,7 +172,24 @@ export default {
       showRegisterDialog,
       closeLoginDialog,
       closeRegisterDialog,
+      changeLanguage,
+      currentLocale,
     };
   },
 };
 </script>
+
+<style scoped>
+.auth-and-lang {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* 調整按鈕和選擇器之間的距離 */
+}
+
+.language-selector {
+  padding: 5px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+</style>
