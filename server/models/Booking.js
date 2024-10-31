@@ -9,7 +9,7 @@ const BookingSchema = new mongoose.Schema({
     email: { type: String, required: true },
   },
   date: { type: Date, default: Date.now },
+  paymentStatus: { type: String, enum: ['已付款', '未付款', '退款中'], default: '未付款' },
 });
-
 
 module.exports = mongoose.model('Booking', BookingSchema);
