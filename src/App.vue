@@ -62,26 +62,21 @@ export default {
     const showLoginDialog = ref(false);
     const showRegisterDialog = ref(false);
 
-    // 關閉登入彈窗
+    // Close login dialog
     const closeLoginDialog = () => {
-      setTimeout(() => {
-        showLoginDialog.value = false;
-      }, 0);
+      showLoginDialog.value = false;
     };
 
-    // 關閉註冊彈窗
+    // Close register dialog
     const closeRegisterDialog = () => {
-      setTimeout(() => {
-        showRegisterDialog.value = false;
-      }, 0);
+      showRegisterDialog.value = false;
     };
 
-    const isAuthenticated = computed(
-      () => store.getters["auth/isAuthenticated"]
-    );
+    // Authentication and role information
+    const isAuthenticated = computed(() => store.getters["auth/isAuthenticated"]);
     const userRole = computed(() => store.getters["auth/userRole"]);
 
-    // 左側菜單項目
+    // Left-side menu items
     const items = computed(() => [
       {
         label: "首頁",
@@ -100,9 +95,10 @@ export default {
       },
     ]);
 
-    // 右側身份驗證項目
+    // Right-side authentication items
     const authItems = computed(() => {
-      let menuItems = [];
+      const menuItems = [];
+
       if (!isAuthenticated.value || userRole.value === "guest") {
         menuItems.push(
           {
@@ -116,44 +112,27 @@ export default {
             command: () => (showRegisterDialog.value = true),
           }
         );
-      } else if (userRole.value === "user" || userRole.value === "admin") {
-        // 用戶和管理員的菜單項
-        const roleSpecificItems =
-          userRole.value === "user"
-            ? [
-                {
-                  label: "預約課程",
-                  icon: "pi pi-fw pi-pencil",
-                  command: () => router.push("/booking"),
-                },
-                {
-                  label: "個人資訊",
-                  icon: "pi pi-fw pi-user",
-                  command: () => router.push("/personal-info"),
-                },
-              ]
-            : [
-                {
-                  label: "編輯課程",
-                  icon: "pi pi-fw pi-calendar",
-                  command: () => router.push("/courses"),
-                },
-                {
-                  label: "CRM",
-                  icon: "pi pi-fw pi-users",
-                  command: () => router.push("/crm"),
-                },
-              ];
+      } else {
+        if (userRole.value === "user") {
+          menuItems.push(
+            { label: "預約課程", icon: "pi pi-fw pi-pencil", command: () => router.push("/booking") },
+            { label: "個人資訊", icon: "pi pi-fw pi-user", command: () => router.push("/personal-info") }
+          );
+        } else if (userRole.value === "admin") {
+          menuItems.push(
+            { label: "編輯課程", icon: "pi pi-fw pi-calendar", command: () => router.push("/courses") },
+            { label: "CRM", icon: "pi pi-fw pi-users", command: () => router.push("/crm") },
+            { label: "訂單管理", icon: "pi pi-fw pi-list", command: () => router.push("/admin/orders") }
+          );
+        }
 
-        menuItems.push(...roleSpecificItems);
-
-        // 添加登出選項
+        // Add logout option for authenticated users
         menuItems.push({
           label: "登出",
           icon: "pi pi-fw pi-sign-out",
           command: async () => {
             await store.dispatch("auth/logout");
-            // 登出後的路由跳轉現在由 Vuex action 處理
+            router.push("/"); // Redirect after logout
           },
         });
       }

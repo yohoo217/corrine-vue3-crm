@@ -1,15 +1,17 @@
-// server/routes/bookings.js
+//server/routes/bookings.js
 const express = require("express");
 const router = express.Router();
 const Booking = require("../models/Booking"); // Booking 模型
+const authMiddleware = require("../../middleware/auth");
+const isAdmin = require("../../middleware/admin");
 
 // 根據 email 獲取所有預約
-router.get('/user/email/:email', async (req, res) => {
+router.get('/user/email/:email', authMiddleware, async (req, res) => {
   console.log('Fetching bookings for email:', req.params.email);
   try {
     const email = req.params.email;
-    
-    // 直接使用 customer.email 查詢所有符合條件的預約
+
+    // 使用 customer.email 查詢符合條件的預約
     const bookings = await Booking.find({ 'customer.email': email }).populate('course');
     
     if (!bookings.length) {
@@ -21,6 +23,24 @@ router.get('/user/email/:email', async (req, res) => {
     res.json(bookings);
   } catch (err) {
     console.error('Error fetching bookings:', err);
+    res.status(500).json({ message: 'Error fetching bookings', error: err.message });
+  }
+});
+
+// Admin 查看所有預約及其付款狀況
+router.get('/admin/orders', authMiddleware, isAdmin, async (req, res) => {
+  try {
+    const bookings = await Booking.find().populate('course');
+
+    if (!bookings.length) {
+      console.log('No bookings found');
+      return res.status(404).json({ message: 'No bookings found' });
+    }
+
+    console.log('Admin fetched all bookings:', bookings);
+    res.json(bookings);
+  } catch (err) {
+    console.error('Error fetching all bookings:', err);
     res.status(500).json({ message: 'Error fetching bookings', error: err.message });
   }
 });
