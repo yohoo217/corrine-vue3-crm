@@ -5,10 +5,107 @@
     "course_name": "旅遊日語班",
     "course_description": "讀萬卷書不如行萬里路，讓我們幫助你身體力行吧! 文化，即是遇見差異的開始。語言，將是開啟對話的鑰匙。旅行，則是體驗一切的道路。精心設計的主題式學習，讓你可以預習旅行中常見的場景。準備言語知識，並透過互動實際練習如何思考及應對。",
     "theme_conversation_class": "主題會話實用班",
-    "theme_class_description": "- 主題會話實用班：由日籍老師帶領，透過大量的聽說練習和生活化的情境理解享受對話和互動的樂趣！- 基礎文法打底班：從基礎開始認識日語的言語知識和法結構，兼具聽說讀寫的紮實訓練讓你能夠開口，也能感受閱讀和書寫的奧妙。- 多語咖啡：不定期舉辦線上和實體交流活動，透過與外籍老師、母語者和語言學習者間的互動體驗多樣化的輸出和輸入練習。- 無論您是初學者還是有一定基礎，我們都能幫助您在輕鬆有趣的環境中提升日語能力讓您享受學習過程，體驗用日語交流的快樂。"
+    "theme_class_description": "主題會話實用班：由日籍老師帶領，透過大量的聽說練習和生活化的情境理解享受對話和互動的樂趣！\n- 基礎文法打底班：從基礎開始認識日語的言語知識和法結構，兼具聽說讀寫的紮實訓練讓你能夠開口，也能感受閱讀和書寫的奧妙。\n- 多語咖啡：不定期舉辦線上和實體交流活動，透過與外籍老師、母語者和語言學習者間的互動體驗多樣化的輸出和輸入練習。\n無論您是初學者還是有一定基礎，我們都能幫助您在輕鬆有趣的環境中提升日語能力讓您享受學習過程，體驗用日語交流的快樂。"
+  },
+  "footer": {
+    "privacy_policy": "隱私權政策",
+    "terms_of_use": "使用條款",
+    "legal_notice": "法律聲明",
+    "site_map": "網站地圖"
   },
   "booking": "預訂",
   "course": "課程",
   "login": "登入",
-  "register": "註冊"
+  "register": "註冊",
+  "course_info": {
+    "title": "課程資訊"
+  },
+  "course_1": {
+    "name": "旅遊日文班"
+  },
+  "course_2": {
+    "name": "日文主題會話班"
+  },
+  "course_3": {
+    "name": "日語家教"
+  },
+  "course_4": {
+    "name": "英語家教"
+  },
+  "menu": {
+    "home": "首頁",
+    "news": "最新消息",
+    "course_info": "課程資訊",
+    "login": "登入",
+    "register": "註冊",
+    "booking": "預約課程",
+    "personal_info": "個人資訊",
+    "logout": "登出",
+    "edit_courses": "編輯課程",
+    "crm": "CRM",
+    "order_management": "訂單管理"
+  },
+  "news": {
+    "title": "最新消息",
+    "read_more": "閱讀更多",
+    "autumn_course": {
+      "title": "秋季日語課程即將開放報名",
+      "summary": "我們很高興地宣布，2024年秋季日語課程現招生開跑囉以「主題情境」來編排課程，讓大家嘗試跳脫以語彙和文法為主的學習模式，透過多樣化的情境聯想，練習相關的對話內容和所需的詞彙與文法。！本季課程將聚焦於日本文化與商務日語，幫助學員在工作和生活中更好地運用日語。"
+    },
+    "bilingual_cafe_july": {
+      "title": "[ Bilingual Cafe 雙語文藝講咖啡 ] @ Hualien City - 23",
+      "summary": "歡迎參加我們每月的實體雙語咖啡聚會！這次時間訂在 7/6 (Sat) 19:30~，目前我們有說英語、中文、日語的夥伴們，歡迎大家介紹大家，讓我們在花蓮多一個超棒的活動喔！"
+    },
+    "bilingual_cafe_may": {
+      "title": "[ Bilingual Cafe 雙語文藝講咖啡 ] @ Hualien City - 21",
+      "summary": "歡迎參加我們每月的實體雙語咖啡聚會！這次時間訂在 6/1 (Sat) 19:30~，目前我們有說英語、中文、日語的夥伴們，歡迎大家介紹大家，讓我們在花蓮多一個超棒的活動喔！"
+    },
+    "mini_japanese_class": {
+      "title": "迷你日語會話班開放報名",
+      "summary": "以「不先教50音あいうえお」為第一步，而是以「主題式會話」的方式，讓大家不再因為怎麼樣都背不起來的平假、片假名，扼殺了享受學習和開口說日語的動力。"
+    }
+  },
+  "course_booking": {
+    "title": "課程預約",
+    "loading": "正在加載課程資料...",
+    "load_error": "加載課程時出錯",
+    "select_course": "選擇課程",
+    "no_courses": "沒有可用的課程",
+    "course_required": "請選擇一個課程",
+    "name": "姓名",
+    "name_required": "請輸入姓名",
+    "email": "電子郵件",
+    "email_required": "請輸入有效的電子郵件地址",
+    "submit": "預約"
+  },
+  "personal_info": {
+    "title": "個人資料",
+    "username": "姓名",
+    "email": "電子郵件",
+    "booked_courses": "已訂課程",
+    "course_name": "課程名稱",
+    "booking_date": "預約日期",
+    "page_report_template": "顯示第 {first} 到第 {last} 筆，共 {totalRecords} 筆"
+  },
+  "user_login": {
+    "title": "用戶登入",
+    "email_label": "電子郵件",
+    "email_placeholder": "輸入您的電子郵件",
+    "password_label": "密碼",
+    "password_placeholder": "輸入您的密碼",
+    "submit": "登入",
+    "login_failed": "登入失敗。請檢查您的電子郵件和密碼。"
+  },
+  "user_register": {
+    "title": "註冊",
+    "username_label": "用戶名",
+    "username_placeholder": "請輸入您的用戶名",
+    "email_label": "電子郵件",
+    "email_placeholder": "請輸入您的電子郵件",
+    "password_label": "密碼",
+    "password_placeholder": "請輸入您的密碼",
+    "submit": "註冊",
+    "success": "註冊成功，請登入。",
+    "error": "註冊失敗，請重試。"
+  }
 }

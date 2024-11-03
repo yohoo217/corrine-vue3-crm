@@ -3,13 +3,13 @@
     <Toast />
     <div class="p-d-flex p-jc-center">
       <div class="p-card">
-        <h2 class="p-text-center">課程預約</h2>
+        <h2 class="p-text-center">{{ $t('course_booking.title') }}</h2>
         <div v-show="$store.state.courses.isLoading" class="p-text-center">
           <ProgressSpinner />
-          <p>正在加載課程資料...</p>
+          <p>{{ $t('course_booking.loading') }}</p>
         </div>
         <div v-show="$store.state.courses.error" class="p-error p-text-center">
-          加載課程時出錯: {{ $store.state.courses.error }}
+          {{ $t('course_booking.load_error') }}: {{ $store.state.courses.error }}
         </div>
         <form
           v-show="
@@ -19,9 +19,9 @@
           class="p-fluid"
         >
           <div class="p-field">
-            <label for="course">選擇課程</label>
+            <label for="course">{{ $t('course_booking.select_course') }}</label>
             <div v-if="courses.length === 0" class="p-text-center">
-              沒有可用的課程
+              {{ $t('course_booking.no_courses') }}
             </div>
             <div
               v-for="course in courses"
@@ -43,12 +43,12 @@
               v-if="v$.booking.course.$invalid && submitted"
               class="p-error"
             >
-              請選擇一個課程
+              {{ $t('course_booking.course_required') }}
             </small>
           </div>
 
           <div class="p-field">
-            <label for="name">姓名</label>
+            <label for="name">{{ $t('course_booking.name') }}</label>
             <InputText
               id="name"
               v-model.trim="booking.name"
@@ -56,11 +56,11 @@
               disabled
             />
             <small v-if="v$.booking.name.$invalid && submitted" class="p-error">
-              請輸入姓名
+              {{ $t('course_booking.name_required') }}
             </small>
           </div>
           <div class="p-field">
-            <label for="email">電子郵件</label>
+            <label for="email">{{ $t('course_booking.email') }}</label>
             <InputText
               id="email"
               v-model.trim="booking.email"
@@ -71,12 +71,12 @@
               v-if="v$.booking.email.$invalid && submitted"
               class="p-error"
             >
-              請輸入有效的電子郵件地址
+              {{ $t('course_booking.email_required') }}
             </small>
           </div>
           <Button
             type="submit"
-            label="預約"
+            :label="$t('course_booking.submit')"
             class="p-button-raised p-button-rounded"
           />
         </form>
