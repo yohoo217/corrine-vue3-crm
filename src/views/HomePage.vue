@@ -23,7 +23,7 @@
     <section class="introduction-3">
       <div class="left-content">
         <h1>{{ $t('home.theme_conversation_class') }}</h1>
-        <p>{{ $t('home.theme_class_description') }}</p>
+        <p class="description">{{ $t('home.theme_class_description') }}</p>
       </div>
       <div class="right-content">
         <img
@@ -148,5 +148,9 @@ export default defineComponent({
 .content-image {
   max-width: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.description {
+  white-space: pre-line;
 }
 </style>

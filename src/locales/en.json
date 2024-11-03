@@ -5,10 +5,107 @@
     "course_name": "Tourism Japanese",
     "course_description": "Reading thousands of books is not as good as traveling thousands of miles. Let us help you experience it in practice! Culture is the beginning of encountering differences. Language will be the key to unlocking conversations. Travel is the path to experience everything. Thematic learning helps you prepare for common scenarios during travel. Prepare your language knowledge and practice how to think and respond through interactive exercises.",
     "theme_conversation_class": "Practical Thematic Conversation Class",
-    "theme_class_description": "- Practical Thematic Conversation Class: Led by Japanese teachers, enjoy the joy of conversation and interaction through extensive listening and speaking practice in real-life situations! - Basic Grammar Foundation Class: Start from the basics to understand Japanese language knowledge and grammar structure, with solid training in listening, speaking, reading, and writing so you can speak out and enjoy the intricacies of reading and writing. - Multilingual Cafe: Regular online and in-person exchange activities where you can experience diverse input and output practices through interaction with foreign teachers, native speakers, and language learners. - Whether you're a beginner or have some foundation, we can help you enhance your Japanese skills in a relaxed and enjoyable environment, letting you enjoy the learning process and experience the joy of Japanese communication."
+    "theme_class_description": "Practical Thematic Conversation Class: Led by Japanese teachers, enjoy the joy of conversation and interaction through extensive listening and speaking practice in real-life situations! \n- Basic Grammar Foundation Class: Start from the basics to understand Japanese language knowledge and grammar structure, with solid training in listening, speaking, reading, and writing so you can speak out and enjoy the intricacies of reading and writing. \n- Multilingual Cafe: Regular online and in-person exchange activities where you can experience diverse input and output practices through interaction with foreign teachers, native speakers, and language learners. \n Whether you're a beginner or have some foundation, we can help you enhance your Japanese skills in a relaxed and enjoyable environment, letting you enjoy the learning process and experience the joy of Japanese communication."
+  },
+  "footer": {
+    "privacy_policy": "Privacy Policy",
+    "terms_of_use": "Terms of Use",
+    "legal_notice": "Legal Notice",
+    "site_map": "Site Map"
   },
   "booking": "Booking",
   "course": "Course",
   "login": "Login",
-  "register": "Register"
+  "register": "Register",
+  "course_info": {
+    "title": "Course Information"
+  },
+  "course_1": {
+    "name": "Tourism Japanese"
+  },
+  "course_2": {
+    "name": "Japanese Conversation"
+  },
+  "course_3": {
+    "name": "Japanese Tutoring"
+  },
+  "course_4": {
+    "name": "English Tutoring"
+  },
+  "menu": {
+    "home": "Home",
+    "news": "News",
+    "course_info": "Course Information",
+    "login": "Login",
+    "register": "Register",
+    "booking": "Booking",
+    "personal_info": "Personal Info",
+    "logout": "Logout",
+    "edit_courses": "Edit Courses",
+    "crm": "CRM",
+    "order_management": "Order Management"
+  },
+  "news": {
+    "title": "Latest News",
+    "read_more": "Read More",
+    "autumn_course": {
+      "title": "Autumn Japanese Course Enrollment",
+      "summary": "We are pleased to announce that enrollment for the 2024 Autumn Japanese course is now open. The course is designed to break away from traditional vocabulary and grammar-focused learning. It features thematic situational learning, where students practice dialogues and vocabulary relevant to various real-life situations. This season's course will focus on Japanese culture and business Japanese, helping students use Japanese more effectively in both work and life."
+    },
+    "bilingual_cafe_july": {
+      "title": "[ Bilingual Cafe ] @ Hualien City - July",
+      "summary": "Join our monthly in-person Bilingual Cafe meeting! This time, it's scheduled for 7/6 (Sat) 19:30~. We have participants speaking English, Chinese, and Japanese. Come introduce yourself and enjoy this fantastic event in Hualien!"
+    },
+    "bilingual_cafe_may": {
+      "title": "[ Bilingual Cafe ] @ Hualien City - May",
+      "summary": "Join our monthly in-person Bilingual Cafe meeting! This time, it's scheduled for 6/1 (Sat) 19:30~. We have participants speaking English, Chinese, and Japanese. Come introduce yourself and enjoy this fantastic event in Hualien!"
+    },
+    "mini_japanese_class": {
+      "title": "Mini Japanese Conversation Class Enrollment",
+      "summary": "This class avoids starting with 'aiueo' and instead uses 'thematic conversation' to prevent students from feeling discouraged by the challenges of memorizing kana. This approach aims to inspire enjoyment in learning and speaking Japanese."
+    }
+  },
+  "course_booking": {
+    "title": "Course Booking",
+    "loading": "Loading course data...",
+    "load_error": "Error loading courses",
+    "select_course": "Select Course",
+    "no_courses": "No courses available",
+    "course_required": "Please select a course",
+    "name": "Name",
+    "name_required": "Please enter your name",
+    "email": "Email",
+    "email_required": "Please enter a valid email address",
+    "submit": "Book Now"
+  },
+  "personal_info": {
+    "title": "Personal Information",
+    "username": "Name",
+    "email": "Email",
+    "booked_courses": "Booked Courses",
+    "course_name": "Course Name",
+    "booking_date": "Booking Date",
+    "page_report_template": "Showing {first} to {last} of {totalRecords} entries"
+  },
+  "user_login": {
+    "title": "User Login",
+    "email_label": "Email",
+    "email_placeholder": "Enter your email",
+    "password_label": "Password",
+    "password_placeholder": "Enter your password",
+    "submit": "Login",
+    "login_failed": "Login failed. Please check your email and password."
+  },
+  "user_register": {
+    "title": "Register",
+    "username_label": "Username",
+    "username_placeholder": "Enter your username",
+    "email_label": "Email",
+    "email_placeholder": "Enter your email",
+    "password_label": "Password",
+    "password_placeholder": "Enter your password",
+    "submit": "Register",
+    "success": "Registration successful. Please log in.",
+    "error": "Registration failed. Please try again."
+  }
 }

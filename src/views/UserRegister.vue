@@ -1,21 +1,44 @@
 <template>
   <div class="register-container">
-    <h2 class="register-title">註冊</h2>
+    <h2 class="register-title">{{ $t('user_register.title') }}</h2>
     <form @submit.prevent="register" class="register-form">
       <div class="input-group">
-        <label for="username">用戶名</label>
-        <InputText v-model="username" type="text" id="username" placeholder="請輸入您的用戶名" required />
+        <label for="username">{{ $t('user_register.username_label') }}</label>
+        <InputText
+          v-model="username"
+          type="text"
+          id="username"
+          :placeholder="$t('user_register.username_placeholder')"
+          required
+        />
       </div>
       <div class="input-group">
-        <label for="email">電子郵件</label>
-        <InputText v-model="email" type="email" id="email" placeholder="請輸入您的電子郵件" required />
+        <label for="email">{{ $t('user_register.email_label') }}</label>
+        <InputText
+          v-model="email"
+          type="email"
+          id="email"
+          :placeholder="$t('user_register.email_placeholder')"
+          required
+        />
       </div>
       <div class="input-group">
-        <label for="password">密碼</label>
-        <InputText v-model="password" type="password" id="password" placeholder="請輸入您的密碼" required />
+        <label for="password">{{ $t('user_register.password_label') }}</label>
+        <InputText
+          v-model="password"
+          type="password"
+          id="password"
+          :placeholder="$t('user_register.password_placeholder')"
+          required
+        />
       </div>
       <div class="button-group">
-        <Button label="註冊" type="submit" icon="pi pi-user-plus" class="p-button-primary" />
+        <Button
+          :label="$t('user_register.submit')"
+          type="submit"
+          icon="pi pi-user-plus"
+          class="p-button-primary"
+        />
       </div>
     </form>
   </div>
@@ -27,16 +50,18 @@ import { ref } from 'vue';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import apiClient from '../api/config';
+import { useI18n } from 'vue-i18n';
 
 export default {
   name: 'UserRegister',
-  props: ['onClose'], // 接收父組件傳遞的關閉方法
+  props: ['onClose'],
   components: {
     InputText,
     Button,
   },
   setup(props) {
     const router = useRouter();
+    const { t } = useI18n();
 
     const username = ref('');
     const email = ref('');
@@ -49,11 +74,11 @@ export default {
           email: email.value,
           password: password.value,
         });
-        alert('註冊成功，請登入');
-        props.onClose(); // 註冊成功後關閉 popup
+        alert(t('user_register.success'));
+        props.onClose();
         router.push('/login');
       } catch (error) {
-        alert(error.response.data.error);
+        alert(error.response?.data?.error || t('user_register.error'));
       }
     };
 

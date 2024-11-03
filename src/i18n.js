@@ -1,3 +1,4 @@
+//src/i18n.js
 import { createI18n } from 'vue-i18n';
 import en from './locales/en.json';
 import zh from './locales/zh.json';
@@ -13,7 +14,9 @@ const locale = localStorage.getItem('language') || 'zh';
 const i18n = createI18n({
   locale,
   fallbackLocale: 'en',
-  messages
+  messages,
+  globalInjection: true,
+  legacy: false // 如果您使用组合式 API，需要设置为 false
 });
 
 export default i18n;
