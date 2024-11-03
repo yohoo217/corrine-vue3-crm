@@ -1,17 +1,34 @@
 <template>
   <div class="login-container">
-    <h2 class="login-title">登入</h2>
+    <h2 class="login-title">{{ $t('user_login.title') }}</h2>
     <form @submit.prevent="login" class="login-form">
       <div class="input-group">
-        <label for="email">電子郵件</label>
-        <InputText v-model="email" type="email" id="email" placeholder="請輸入您的電子郵件" required />
+        <label for="email">{{ $t('user_login.email_label') }}</label>
+        <InputText
+          v-model="email"
+          type="email"
+          id="email"
+          :placeholder="$t('user_login.email_placeholder')"
+          required
+        />
       </div>
       <div class="input-group">
-        <label for="password">密碼</label>
-        <InputText v-model="password" type="password" id="password" placeholder="請輸入您的密碼" required />
+        <label for="password">{{ $t('user_login.password_label') }}</label>
+        <InputText
+          v-model="password"
+          type="password"
+          id="password"
+          :placeholder="$t('user_login.password_placeholder')"
+          required
+        />
       </div>
       <div class="button-group">
-        <Button label="登入" type="submit" icon="pi pi-sign-in" class="p-button-primary" />
+        <Button
+          :label="$t('user_login.submit')"
+          type="submit"
+          icon="pi pi-sign-in"
+          class="p-button-primary"
+        />
       </div>
     </form>
   </div>
@@ -24,10 +41,11 @@ import { useRouter } from 'vue-router';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import apiClient from '../api/config';
+import { useI18n } from 'vue-i18n';
 
 export default {
   name: 'UserLogin',
-  props: ['onClose'], // 接收父組件傳遞的關閉方法
+  props: ['onClose'],
   components: {
     InputText,
     Button,
@@ -35,6 +53,7 @@ export default {
   setup(props) {
     const store = useStore();
     const router = useRouter();
+    const { t } = useI18n();
 
     const email = ref('');
     const password = ref('');
@@ -45,12 +64,11 @@ export default {
           email: email.value,
           password: password.value,
         });
-        // 将 token 和 role 传递给 Vuex
         store.dispatch('auth/login', { token: response.data.token, role: response.data.role });
-        props.onClose(); // 成功後調用父組件傳遞的 onClose 方法關閉 popup
-        router.push('/'); // 登录成功后跳转
+        props.onClose();
+        router.push('/');
       } catch (error) {
-        alert(error.response.data.error);
+        alert(t('user_login.login_failed'));
       }
     };
 

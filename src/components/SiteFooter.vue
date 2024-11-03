@@ -2,7 +2,13 @@
 <template>
   <footer class="footer">
     <div class="footer-content">
-      <p>copyright © 2024 Corrine's Language Cafe 2024 版權所有 | 隱私權政策 | 使用條款 | 法律聲明 | 網站地圖</p>
+      <p>
+        copyright © 2024 Corrine's Language Cafe
+        | <a href="#">{{ $t('footer.privacy_policy') }}</a>
+        | <a href="#">{{ $t('footer.terms_of_use') }}</a>
+        | <a href="#">{{ $t('footer.legal_notice') }}</a>
+        | <a href="#">{{ $t('footer.site_map') }}</a>
+      </p>
       <div class="footer-icons">
         <a href="https://www.facebook.com/profile.php?id=100063904926422&sk=mentions" target="_blank" aria-label="Facebook">
           <img src="https://static.aottercdn.com/trek/media/aba4c2d5-7e42-49fe-8ae2-8bd7778cbf1a.png" alt="Facebook" />
@@ -24,16 +30,17 @@
 
 <script>
 export default {
-  name: 'SiteFooter', // 修改組件名稱為多字詞
+  name: 'SiteFooter',
   methods: {
     changeLanguage(event) {
       const selectedLanguage = event.target.value;
-      this.$i18n.locale = selectedLanguage; // 設置 i18n 的語言
-      localStorage.setItem('language', selectedLanguage); // 保存語言到 localStorage
+      this.$i18n.locale = selectedLanguage;
+      localStorage.setItem('language', selectedLanguage);
     }
   }
 };
 </script>
+
 
 <style scoped>
 .footer {

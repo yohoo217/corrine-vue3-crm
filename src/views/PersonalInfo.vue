@@ -2,25 +2,25 @@
   <div class="personal-info">
     <Toast />
     <div class="p-card animated fadeInUp">
-      <h2 class="p-text-center">個人資料</h2>
+      <h2 class="p-text-center">{{ $t('personal_info.title') }}</h2>
       <div v-if="user" class="p-fluid">
         <div class="p-field animated fadeInLeft">
-          <label for="username">姓名</label>
+          <label for="username">{{ $t('personal_info.username') }}</label>
           <InputText id="username" v-model="user.username" disabled />
         </div>
         <div class="p-field animated fadeInRight">
-          <label for="email">電子郵件</label>
+          <label for="email">{{ $t('personal_info.email') }}</label>
           <InputText id="email" v-model="user.email" disabled />
         </div>
 
-        <h3 class="p-mt-4 animated fadeInUp">已訂課程</h3>
+        <h3 class="p-mt-4 animated fadeInUp">{{ $t('personal_info.booked_courses') }}</h3>
         <DataTable :value="bookings" :paginator="true" :rows="5" 
                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                    :rowsPerPageOptions="[5,10,20]" responsiveLayout="scroll"
-                   currentPageReportTemplate="顯示第 {first} 到第 {last} 筆，共 {totalRecords} 筆"
+                   :currentPageReportTemplate="$t('personal_info.page_report_template')"
                    class="animated fadeIn">
-          <Column field="course.name" header="課程名稱"></Column>
-          <Column field="date" header="預約日期">
+          <Column field="course.name" :header="$t('personal_info.course_name')"></Column>
+          <Column field="date" :header="$t('personal_info.booking_date')">
             <template #body="slotProps">
               {{ new Date(slotProps.data.date).toLocaleString() }}
             </template>
