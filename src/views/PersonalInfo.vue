@@ -1,3 +1,4 @@
+<!-- //src/views/PersonalInfo.vue -->
 <template>
   <div class="personal-info">
     <Toast />

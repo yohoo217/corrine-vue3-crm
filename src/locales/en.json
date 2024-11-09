@@ -94,7 +94,8 @@
     "password_label": "Password",
     "password_placeholder": "Enter your password",
     "submit": "Login",
-    "login_failed": "Login failed. Please check your email and password."
+    "login_failed": "Login failed. Please check your email and password.",
+    "google_login_failed": "Google login failed. Please try again."
   },
   "user_register": {
     "title": "Register",
