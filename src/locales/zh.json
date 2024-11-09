@@ -94,7 +94,9 @@
     "password_label": "密碼",
     "password_placeholder": "輸入您的密碼",
     "submit": "登入",
-    "login_failed": "登入失敗。請檢查您的電子郵件和密碼。"
+    "login_failed": "登入失敗。請檢查您的電子郵件和密碼。",
+    "google_login_failed": "Google 登入失敗。請檢查您的電子郵件和密碼。"
+
   },
   "user_register": {
     "title": "註冊",
