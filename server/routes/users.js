@@ -1,18 +1,26 @@
-// server/routes/users.js
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const auth = require('../../middleware/auth'); // 从 /server/routes/users.js 指向 /middleware/auth.js
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const auth = require('../../middleware/auth');
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 // 註冊路由
 router.post("/register", async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    const user = new User({ username, email, password, isAdmin: false }); // 默认新注册用户不是管理员
+
+    // 確認 email 是否已被註冊
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: "Email 已被註冊" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ username, email, password: hashedPassword, isAdmin: false });
+
     await user.save();
     res.status(201).json({ message: "註冊成功" });
   } catch (error) {
@@ -20,37 +28,39 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) throw new Error("用户不存在");
+// 用戶登入路由
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).json({ message: 'User not found' });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new Error("密码错误");
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
-    // 根据 isAdmin 字段判断 role
-    const role = user.isAdmin ? 'admin' : 'user'; // 如果 isAdmin 为 true，role 就是 admin，否则是 user
+  // 根據用戶的 isAdmin 欄位設定角色
+  const role = user.isAdmin ? 'admin' : 'user';
 
-    // 使用判断后的 role 来生成 token
-    const token = jwt.sign(
-      { id: user._id, role: user.role }, // 從資料庫中的 role 欄位取得角色
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-    res.json({ token, role }); // 确保返回正确的 role
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  // 生成 JWT，將 role 包含在 payload 中
+  const token = jwt.sign(
+    { id: user._id, role },
+    process.env.JWT_SECRET,
+    { expiresIn: '1h' }
+  );
+
+  res.json({ token, role });
 });
 
-router.get('/me', auth, async (req, res) => {
+
+
+// 獲取當前用戶資料
+router.get("/me", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password'); // 排除密碼字段
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) return res.status(404).json({ error: "用户不存在" });
+
     res.json(user);
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: "伺服器錯誤" });
   }
 });
 
@@ -60,22 +70,18 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:5001/api/users/google-callback',
+      callbackURL: "http://localhost:5001/api/users/google-callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        // 用 googleId 查找用戶
         let user = await User.findOne({ googleId: profile.id });
 
         if (!user) {
-          // 如果沒有 googleId，檢查 email 是否已存在
           user = await User.findOne({ email: profile.emails[0].value });
           if (user) {
-            // 如果 email 已存在，更新該用戶的 googleId
             user.googleId = profile.id;
             await user.save();
           } else {
-            // 如果 email 不存在，創建新用戶
             user = await User.create({
               username: profile.displayName,
               email: profile.emails[0].value,
@@ -83,17 +89,13 @@ passport.use(
             });
           }
         }
-
-        return done(null, user);
+        done(null, user);
       } catch (error) {
-        console.error('Error in Google Strategy:', error);
-        return done(error, null);
+        done(error, null);
       }
     }
   )
 );
-
-
 
 passport.serializeUser((user, done) => {
   done(null, user._id);
@@ -110,52 +112,32 @@ passport.deserializeUser(async (id, done) => {
 
 // Google 登入路由
 router.get(
-  '/google-login',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
+  "/google-login",
+  passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 // Google 回調路由
 router.get(
-  '/google-callback',
-  passport.authenticate('google', { failureRedirect: '/login', session: false }),
+  "/google-callback",
+  passport.authenticate("google", { failureRedirect: "/login", session: false }),
   (req, res) => {
     try {
-      console.log('Google OAuth Callback Triggered');
       const user = req.user;
-
-      if (!user) {
-        console.error('User not found in callback');
-        return res.status(400).send('User authentication failed.');
-      }
-
-      console.log('Authenticated User:', user);
-
-      // 根據 isAdmin 判斷 role
-      const role = user.isAdmin ? 'admin' : 'user';
+      if (!user) return res.status(400).send("用户认证失败");
 
       // 生成 JWT
       const token = jwt.sign(
-        { id: user._id, role },
+        { id: user._id, isAdmin: user.isAdmin },
         process.env.JWT_SECRET,
-        { expiresIn: '1h' }
+        { expiresIn: "1h" }
       );
 
-      console.log('JWT Generated:', token);
-
-      // 將 token 和 role 一起傳遞給前端
-      res.redirect(`http://localhost:8080?token=${token}&role=${role}`);
+      // 將 token 傳回前端，安全性改進
+      res.redirect(`http://localhost:8080?token=${encodeURIComponent(token)}&isAdmin=${user.isAdmin}`);
     } catch (error) {
-      console.error('Error in Google Callback:', error);
-      res.status(500).send('Something went wrong!');
+      res.status(500).send("伺服器錯誤");
     }
   }
 );
-
-
-
-
-
-
-
 
 module.exports = router;

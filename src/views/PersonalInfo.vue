@@ -1,4 +1,3 @@
-<!-- //src/views/PersonalInfo.vue -->
 <template>
   <div class="personal-info">
     <Toast />
@@ -15,15 +14,32 @@
         </div>
 
         <h3 class="p-mt-4 animated fadeInUp">{{ $t('personal_info.booked_courses') }}</h3>
-        <DataTable :value="bookings" :paginator="true" :rows="5" 
-                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                   :rowsPerPageOptions="[5,10,20]" responsiveLayout="scroll"
-                   :currentPageReportTemplate="$t('personal_info.page_report_template')"
-                   class="animated fadeIn">
-          <Column field="course.name" :header="$t('personal_info.course_name')"></Column>
+        <DataTable
+          :value="bookings"
+          :paginator="true"
+          :rows="5"
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+          :rowsPerPageOptions="[5, 10, 20]"
+          responsiveLayout="scroll"
+          :currentPageReportTemplate="$t('personal_info.page_report_template')"
+          class="animated fadeIn"
+        >
+          <Column field="course.name" :header="$t('personal_info.course_name')" />
           <Column field="date" :header="$t('personal_info.booking_date')">
             <template #body="slotProps">
               {{ new Date(slotProps.data.date).toLocaleString() }}
+            </template>
+          </Column>
+          <Column field="paymentStatus" :header="$t('personal_info.payment_status')">
+            <template #body="slotProps">
+              <span
+                :class="{
+                  'status-paid': slotProps.data.paymentStatus === 'Paid',
+                  'status-unpaid': slotProps.data.paymentStatus === 'Unpaid',
+                }"
+              >
+                {{ slotProps.data.paymentStatus }}
+              </span>
             </template>
           </Column>
         </DataTable>
@@ -50,7 +66,7 @@ export default {
     DataTable,
     Column,
     ProgressSpinner,
-    Toast
+    Toast,
   },
   setup() {
     const store = useStore();
@@ -65,13 +81,16 @@ export default {
           },
         });
         user.value = response.data;
-        
+
         // 獲取用戶的預約信息
-        const bookingsResponse = await apiClient.get(`/bookings/user/email/${user.value.email}`, {
-          headers: {
-            Authorization: `Bearer ${store.state.auth.token}`,
-          },
-        });
+        const bookingsResponse = await apiClient.get(
+          `/bookings/user/email/${user.value.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${store.state.auth.token}`,
+            },
+          }
+        );
         bookings.value = bookingsResponse.data;
       } catch (error) {
         console.error('Failed to fetch user information:', error);
@@ -83,9 +102,9 @@ export default {
 
     return {
       user,
-      bookings
+      bookings,
     };
-  }
+  },
 };
 </script>
 
@@ -124,6 +143,16 @@ export default {
       color: #34495e;
       margin-top: 2rem;
       margin-bottom: 1rem;
+    }
+
+    .status-paid {
+      color: #2ecc71;
+      font-weight: bold;
+    }
+
+    .status-unpaid {
+      color: #e74c3c;
+      font-weight: bold;
     }
   }
 }
