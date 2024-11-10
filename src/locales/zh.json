@@ -78,15 +78,6 @@
     "email_required": "請輸入有效的電子郵件地址",
     "submit": "預約"
   },
-  "personal_info": {
-    "title": "個人資料",
-    "username": "姓名",
-    "email": "電子郵件",
-    "booked_courses": "已訂課程",
-    "course_name": "課程名稱",
-    "booking_date": "預約日期",
-    "page_report_template": "顯示第 {first} 到第 {last} 筆，共 {totalRecords} 筆"
-  },
   "user_login": {
     "title": "用戶登入",
     "email_label": "電子郵件",
@@ -96,7 +87,6 @@
     "submit": "登入",
     "login_failed": "登入失敗。請檢查您的電子郵件和密碼。",
     "google_login_failed": "Google 登入失敗。請檢查您的電子郵件和密碼。"
-
   },
   "user_register": {
     "title": "註冊",
@@ -109,5 +99,17 @@
     "submit": "註冊",
     "success": "註冊成功，請登入。",
     "error": "註冊失敗，請重試。"
+  },
+  "personal_info": {
+    "title": "個人資料",
+    "username": "姓名",
+    "email": "電子郵件",
+    "booked_courses": "已預約課程",
+    "course_name": "課程名稱",
+    "booking_date": "預約日期",
+    "payment_status": "付款狀態",
+    "payment_paid": "已付款",
+    "payment_unpaid": "未付款",
+    "page_report_template": "顯示第 {first} 至 {last} 筆，共 {totalRecords} 筆"
   }
 }
