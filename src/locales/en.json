@@ -78,15 +78,6 @@
     "email_required": "Please enter a valid email address",
     "submit": "Book Now"
   },
-  "personal_info": {
-    "title": "Personal Information",
-    "username": "Name",
-    "email": "Email",
-    "booked_courses": "Booked Courses",
-    "course_name": "Course Name",
-    "booking_date": "Booking Date",
-    "page_report_template": "Showing {first} to {last} of {totalRecords} entries"
-  },
   "user_login": {
     "title": "User Login",
     "email_label": "Email",
@@ -108,5 +99,17 @@
     "submit": "Register",
     "success": "Registration successful. Please log in.",
     "error": "Registration failed. Please try again."
+  },
+  "personal_info": {
+    "title": "Personal Information",
+    "username": "Name",
+    "email": "Email",
+    "booked_courses": "Booked Courses",
+    "course_name": "Course Name",
+    "booking_date": "Booking Date",
+    "payment_status": "Payment Status",
+    "payment_paid": "Paid",
+    "payment_unpaid": "Unpaid",
+    "page_report_template": "Showing {first} to {last} of {totalRecords} entries"
   }
 }

@@ -10,8 +10,7 @@ const UserSchema = new mongoose.Schema({
   googleId: { type: String, unique: true, sparse: true }, // 新增 googleId
 });
 
-
-
+// 密碼哈希處理
 UserSchema.pre('save', async function (next) {
   if (!this.password || !this.isModified('password')) return next(); // 如果密碼不存在，直接跳過
   try {
@@ -23,5 +22,14 @@ UserSchema.pre('save', async function (next) {
   }
 });
 
+// 新增 comparePassword 方法
+UserSchema.methods.comparePassword = async function (inputPassword) {
+  try {
+    // 使用 bcrypt.compare 對比密碼
+    return await bcrypt.compare(inputPassword, this.password);
+  } catch (err) {
+    throw new Error('密碼比對失敗');
+  }
+};
 
 module.exports = mongoose.model('User', UserSchema);
