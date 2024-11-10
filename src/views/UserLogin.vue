@@ -1,9 +1,9 @@
 <template>
   <div class="login-container">
-    <h2 class="login-title">{{ $t('user_login.title') }}</h2>
+    <h2 class="login-title">{{ $t("user_login.title") }}</h2>
     <form @submit.prevent="login" class="login-form">
       <div class="input-group">
-        <label for="email">{{ $t('user_login.email_label') }}</label>
+        <label for="email">{{ $t("user_login.email_label") }}</label>
         <InputText
           v-model="email"
           type="email"
@@ -13,7 +13,7 @@
         />
       </div>
       <div class="input-group">
-        <label for="password">{{ $t('user_login.password_label') }}</label>
+        <label for="password">{{ $t("user_login.password_label") }}</label>
         <InputText
           v-model="password"
           type="password"
@@ -30,22 +30,32 @@
           class="p-button-primary"
         />
       </div>
+      <div class="google-login">
+        <Button
+          type="button"
+          label="Login with Google"
+          icon="pi pi-google"
+          class="p-button-success"
+          @click="loginWithGoogle"
+        />
+      </div>
     </form>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue';
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
-import InputText from 'primevue/inputtext';
-import Button from 'primevue/button';
-import apiClient from '../api/config';
-import { useI18n } from 'vue-i18n';
+import { ref } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import InputText from "primevue/inputtext";
+import Button from "primevue/button";
+import apiClient from "../api/config";
+import { useI18n } from "vue-i18n";
+import axios from "axios";
 
 export default {
-  name: 'UserLogin',
-  props: ['onClose'],
+  name: "UserLogin",
+  props: ["onClose"],
   components: {
     InputText,
     Button,
@@ -55,20 +65,33 @@ export default {
     const router = useRouter();
     const { t } = useI18n();
 
-    const email = ref('');
-    const password = ref('');
+    const email = ref("");
+    const password = ref("");
 
     const login = async () => {
       try {
-        const response = await apiClient.post('/users/login', {
+        const response = await apiClient.post("/users/login", {
           email: email.value,
           password: password.value,
         });
-        store.dispatch('auth/login', { token: response.data.token, role: response.data.role });
+        store.dispatch("auth/login", {
+          token: response.data.token,
+          role: response.data.role,
+        });
         props.onClose();
-        router.push('/');
+        router.push("/");
       } catch (error) {
-        alert(t('user_login.login_failed'));
+        alert(t("user_login.login_failed"));
+      }
+    };
+
+    const loginWithGoogle = async () => {
+      try {
+        console.log("Login with Google button clicked");
+        window.location.href = `${axios.defaults.baseURL}/users/google-login`;
+      } catch (error) {
+        console.error("Error in loginWithGoogle:", error);
+        alert(t("user_login.google_login_failed"));
       }
     };
 
@@ -76,6 +99,7 @@ export default {
       email,
       password,
       login,
+      loginWithGoogle,
     };
   },
 };

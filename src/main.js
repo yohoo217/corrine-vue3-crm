@@ -20,6 +20,18 @@ import 'primeflex/primeflex.css'
 axios.defaults.baseURL = 'http://localhost:5001/api'
 
 const app = createApp(App)
+const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get('token');
+const role = urlParams.get('role');
+
+
+if (token && role) {
+  store.dispatch('auth/login', { token, role });
+
+  // 移除 URL 中的參數
+  window.history.replaceState({}, document.title, window.location.pathname);
+}
+
 
 // 配置 Vue 的全局錯誤處理器
 app.config.errorHandler = (err, vm, info) => {
@@ -34,5 +46,7 @@ app.use(PrimeVue)
 app.use(ToastService)
 app.use(ConfirmationService)
 app.use(i18n) // 使用 i18n
+
+
 
 app.mount('#app')
