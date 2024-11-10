@@ -5,13 +5,15 @@ const bcrypt = require('bcryptjs');
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  isAdmin: { type: Boolean, default: false }, // 使用 isAdmin 判断角色
+  password: { type: String, required: false }, // 改為非必填
+  isAdmin: { type: Boolean, default: false },
+  googleId: { type: String, unique: true, sparse: true }, // 新增 googleId
 });
 
 
+
 UserSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+  if (!this.password || !this.isModified('password')) return next(); // 如果密碼不存在，直接跳過
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
@@ -20,5 +22,6 @@ UserSchema.pre('save', async function (next) {
     next(err);
   }
 });
+
 
 module.exports = mongoose.model('User', UserSchema);

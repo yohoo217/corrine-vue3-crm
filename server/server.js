@@ -7,6 +7,9 @@ const cors = require('cors');
 const app = express();
 const customersRouter = require('./routes/customers');
 const coursesRouter = require('./routes/courses');
+const passport = require('passport');
+const session = require('express-session');
+
 
 const PORT = process.env.PORT || 5001;
 
@@ -22,6 +25,19 @@ app.use(express.json());
 app.use('/api/courses', coursesRouter);
 app.use('/api/customers', customersRouter);
 
+// Express session 配置
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'default_secret', // 從 .env 讀取 SESSION_SECRET
+    resave: false, // 不要在每次請求時重新保存 session
+    saveUninitialized: false, // 只有在內容變更時才保存 session
+    cookie: { secure: false }, // HTTPS 下設置為 true，本地開發設置為 false
+  })
+);
+
+// Passport 初始化
+app.use(passport.initialize());
+app.use(passport.session());
 
 // 日誌中間件
 app.use((req, res, next) => {
