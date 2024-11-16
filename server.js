@@ -22,8 +22,7 @@ app.use('/api/bookings', bookingsRouter);
 app.use('/api/customers', customersRouter);
 
 mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000
 })
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('Could not connect to MongoDB', err));
