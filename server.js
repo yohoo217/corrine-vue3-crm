@@ -13,7 +13,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));app.use(express.json());
 
-const coursesRouter = require('./routes/courses');
+const coursesRouter = require('./server/routes/courses');
 const bookingsRouter = require('./routes/bookings');
 const customersRouter = require('./routes/customers');
 
