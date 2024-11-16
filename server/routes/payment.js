@@ -20,6 +20,8 @@ const options = {
 };
 
 router.post('/pay', (req, res) => { // 確保這裡是 `POST` 方法
+  console.log('支付平台返回的數據:', req.body);
+
   const { price, itemName, bookingId } = req.body;
 
   const MerchantTradeDate = new Date().toLocaleString('zh-TW', {
@@ -40,8 +42,8 @@ router.post('/pay', (req, res) => { // 確保這裡是 `POST` 方法
     TotalAmount: price, // 使用前端傳遞的價格
     TradeDesc: '課程預約支付',
     ItemName: itemName, // 使用前端傳遞的課程名稱
-    ReturnURL: `${HOST}/api/payment/return`, // 綠界的回傳 URL
-    ClientBackURL: `${HOST}/api/payment/clientReturn`, // 用戶完成交易後的返回 URL
+    ReturnURL: `${HOST}/api/payment/return`,
+    ClientBackURL: `${HOST}/api/payment/clientReturn`,
     CustomField1: bookingId, // 傳遞 bookingId
   };
   
@@ -52,21 +54,34 @@ router.post('/pay', (req, res) => { // 確保這裡是 `POST` 方法
 });
 
 router.post('/return', async (req, res) => {
-  const { CheckMacValue } = req.body;
+  const { CheckMacValue, CustomField1 } = req.body;
+
+  console.log('支付平台返回的數據:', req.body);
+
+  if (!CustomField1) {
+    console.error('缺少 bookingId');
+    return res.status(400).send('Missing bookingId');
+  }
+
   const data = { ...req.body };
   delete data.CheckMacValue;
 
   const create = new ecpay_payment(options);
   const checkValue = create.payment_client.helper.gen_chk_mac_value(data);
 
+  console.log('本地計算的 CheckMacValue:', checkValue);
+  console.log('支付平台返回的 CheckMacValue:', CheckMacValue);
+
   if (CheckMacValue === checkValue) {
     console.log('交易驗證成功');
 
-    // 獲取 bookingId 並更新付款狀態
-    const bookingId = req.body.CustomField1;
     try {
-      await Booking.findByIdAndUpdate(bookingId, { paymentStatus: 'paid' });
-      console.log('訂單付款狀態已更新');
+      const booking = await Booking.findByIdAndUpdate(CustomField1, { paymentStatus: 'paid' }, { new: true });
+      if (booking) {
+        console.log('訂單付款狀態已更新:', booking);
+      } else {
+        console.error('找不到對應的訂單:', CustomField1);
+      }
     } catch (err) {
       console.error('更新付款狀態時出錯:', err);
     }
@@ -77,8 +92,9 @@ router.post('/return', async (req, res) => {
   res.send('1|OK');
 });
 
+
 router.get('/clientReturn', (req, res) => {
-  res.send('交易完成，您可以返回應用程式。');
+  res.redirect('http://localhost:8080/booking'); // 重定向到订课页面
 });
 
 module.exports = router;

@@ -9,9 +9,12 @@ const customersRouter = require('./routes/customers');
 const coursesRouter = require('./routes/courses');
 const passport = require('passport');
 const session = require('express-session');
+const path = require('path');
 
 
 const PORT = process.env.PORT || 5001;
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 // CORS 配置應該在其他中間件和路由之前
 app.use(cors({
