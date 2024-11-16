@@ -14,8 +14,8 @@ const corsOptions = {
 app.use(cors(corsOptions));app.use(express.json());
 
 const coursesRouter = require('./server/routes/courses');
-const bookingsRouter = require('./routes/bookings');
-const customersRouter = require('./routes/customers');
+const bookingsRouter = require('./server/routes/bookings');
+const customersRouter = require('./server/routes/customers');
 
 app.use('/api/courses', coursesRouter);
 app.use('/api/bookings', bookingsRouter);
