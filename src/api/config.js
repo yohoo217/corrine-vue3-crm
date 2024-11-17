@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://wangcom.online/api',
+  baseURL: 'http://localhost:5001/api', // 如果要改在本地或是線上運作，這裡要改
   headers: {
     'Content-Type': 'application/json'
   },

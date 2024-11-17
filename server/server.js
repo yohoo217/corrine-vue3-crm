@@ -1,22 +1,20 @@
-//server/server.js
+// server/server.js
 require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const app = express();
-const customersRouter = require('./routes/customers');
-const coursesRouter = require('./server/routes/courses');
 const passport = require('passport');
 const session = require('express-session');
 const path = require('path');
 
-
+const app = express();
 const PORT = process.env.PORT || 5001;
 
+// 靜態文件
 app.use(express.static(path.join(__dirname, 'public')));
 
-// CORS 配置應該在其他中間件和路由之前
+// CORS 配置
 app.use(cors({
   origin: ['http://localhost:8080', 'http://localhost:5002'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -25,16 +23,14 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use('/api/courses', coursesRouter);
-app.use('/api/customers', customersRouter);
 
 // Express session 配置
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || 'default_secret', // 從 .env 讀取 SESSION_SECRET
-    resave: false, // 不要在每次請求時重新保存 session
-    saveUninitialized: false, // 只有在內容變更時才保存 session
-    cookie: { secure: false }, // HTTPS 下設置為 true，本地開發設置為 false
+    secret: process.env.SESSION_SECRET || 'default_secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false },
   })
 );
 
@@ -48,27 +44,28 @@ app.use((req, res, next) => {
   next();
 });
 
-// 路由
-app.use('/api/customers', require('./routes/customers'));
-app.use('/api/courses', require('./routes/courses'));
-app.use('/api/bookings', require('./routes/bookings'));
+// 路由引入
+const customersRouter = require(path.resolve(__dirname, 'routes/customers'));
+const coursesRouter = require(path.resolve(__dirname, 'routes/courses'));
+const bookingsRouter = require(path.resolve(__dirname, 'routes/bookings'));
+const paymentRouter = require(path.resolve(__dirname, 'routes/payment'));
+const usersRouter = require(path.resolve(__dirname, 'routes/users'));
 
+
+// 路由使用
+app.use('/api/customers', customersRouter);
+app.use('/api/courses', coursesRouter);
+app.use('/api/bookings', bookingsRouter);
+app.use('/api/payment', paymentRouter);
+app.use('/api/users', usersRouter);
+
+// 測試路由
 app.get('/api/test', (req, res) => {
   res.json({ message: 'Server is running' });
 });
 
-app.use('/api/payment', require('./routes/payment')); // 使用支付路由，與其他路由一致
-
-
 // MongoDB 連接
 const MONGODB_URI = process.env.MONGODB_URI;
-console.log('MONGODB_URI:', MONGODB_URI);
-// 導入路由
-const userRoutes = require('./routes/users');
-
-
-app.use('/api/users', userRoutes);
-
 if (!MONGODB_URI) {
   console.error('MONGODB_URI is not defined in the environment variables.');
   process.exit(1);
