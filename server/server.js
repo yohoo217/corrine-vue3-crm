@@ -1,19 +1,38 @@
 //server/server.js
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
-const customersRouter = require('./routes/customers');
-// const coursesRouter = require('./server/routes/courses');
-const coursesRouter = require('./routes/courses');
 const passport = require('passport');
 const session = require('express-session');
-const path = require('path');
+const MongoStore = require('connect-mongo');
+const customersRouter = require('./routes/customers');
+const coursesRouter = require('./routes/courses');
 
+// MongoDB 連接
+const MONGODB_URI = process.env.MONGODB_URI;
+console.log('MONGODB_URI:', MONGODB_URI);
+
+if (!MONGODB_URI) {
+  console.error('MONGODB_URI is not defined in the environment variables.');
+  process.exit(1);
+}
 
 const PORT = process.env.PORT || 5001;
+
+// Express session 配置
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'default_secret', // 從 .env 讀取 SESSION_SECRET
+    resave: false, // 不要在每次請求時重新保存 session
+    saveUninitialized: false, // 只有在內容變更時才保存 session
+    store: MongoStore.create({ mongoUrl: MONGODB_URI }),
+    cookie: { secure: false }, // HTTPS 下設置為 true，本地開發設置為 false
+  })
+);
 
 app.use(express.static(path.join(__dirname, '../dist')));
 
@@ -29,15 +48,7 @@ app.use(express.json());
 app.use('/api/courses', coursesRouter);
 app.use('/api/customers', customersRouter);
 
-// Express session 配置
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || 'default_secret', // 從 .env 讀取 SESSION_SECRET
-    resave: false, // 不要在每次請求時重新保存 session
-    saveUninitialized: false, // 只有在內容變更時才保存 session
-    cookie: { secure: false }, // HTTPS 下設置為 true，本地開發設置為 false
-  })
-);
+
 
 // Passport 初始化
 app.use(passport.initialize());
@@ -66,19 +77,12 @@ app.get('*', (req, res) => {
 app.use('/api/payment', require('./routes/payment')); // 使用支付路由，與其他路由一致
 
 
-// MongoDB 連接
-const MONGODB_URI = process.env.MONGODB_URI;
-console.log('MONGODB_URI:', MONGODB_URI);
+
 // 導入路由
 const userRoutes = require('./routes/users');
-
-
 app.use('/api/users', userRoutes);
 
-if (!MONGODB_URI) {
-  console.error('MONGODB_URI is not defined in the environment variables.');
-  process.exit(1);
-}
+
 
 mongoose.connect(MONGODB_URI, {
   serverSelectionTimeoutMS: 5000
@@ -98,3 +102,7 @@ app.use((err, req, res, _next) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+console.log('MONGODB_URI:', process.env.MONGODB_URI);
+console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
+console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET);
