@@ -14,7 +14,7 @@ const path = require('path');
 
 const PORT = process.env.PORT || 5001;
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // CORS 配置應該在其他中間件和路由之前
 app.use(cors({
@@ -56,6 +56,11 @@ app.use('/api/bookings', require('./routes/bookings'));
 app.get('/api/test', (req, res) => {
   res.json({ message: 'Server is running' });
 });
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
+
 
 app.use('/api/payment', require('./routes/payment')); // 使用支付路由，與其他路由一致
 
