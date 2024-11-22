@@ -1,3 +1,4 @@
+//server/routes/users.js
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
@@ -55,11 +56,13 @@ router.post('/login', async (req, res) => {
 // 獲取當前用戶資料
 router.get("/me", auth, async (req, res) => {
   try {
+    console.log('req.user:', req.user); // 檢查 req.user 是否包含 id
     const user = await User.findById(req.user.id).select("-password");
+    console.log('Fetched user:', user); // Add this line to debug
     if (!user) return res.status(404).json({ error: "用户不存在" });
-
     res.json(user);
   } catch (error) {
+    console.error('Error fetching user:', error);
     res.status(500).json({ error: "伺服器錯誤" });
   }
 });
@@ -128,7 +131,7 @@ router.get(
 
       // 生成 JWT
       const token = jwt.sign(
-        { id: user._id, isAdmin: user.isAdmin },
+        { id: user._id, role: user.isAdmin ? 'admin' : 'user' },
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
