@@ -17,7 +17,8 @@ import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 
 // 設置 Axios 的基礎 URL
-axios.defaults.baseURL = 'http://localhost:5001/api'
+// axios.defaults.baseURL = 'http://localhost:5001/api'
+axios.defaults.baseURL = 'https://wangcom.online/api'
 
 const app = createApp(App)
 const urlParams = new URLSearchParams(window.location.search);

@@ -14,7 +14,6 @@ const coursesRouter = require('./routes/courses');
 
 // MongoDB 連接
 const MONGODB_URI = process.env.MONGODB_URI;
-console.log('MONGODB_URI:', MONGODB_URI);
 
 if (!MONGODB_URI) {
   console.error('MONGODB_URI is not defined in the environment variables.');
@@ -102,7 +101,3 @@ app.use((err, req, res, _next) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-console.log('MONGODB_URI:', process.env.MONGODB_URI);
-console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
-console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET);

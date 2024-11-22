@@ -1,7 +1,8 @@
 # API 文檔
 
 ## 基本信息
-- Base URL: `http://localhost:5001/api`
+- Local Base URL: `http://localhost:5001/api`
+- POC Base URL: `https://wangcom.online/api`
 
 ## 路由詳情
 ### 用戶相關
