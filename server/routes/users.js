@@ -2,7 +2,6 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const auth = require('../../middleware/auth');
 const passport = require("passport");
@@ -19,13 +18,13 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ error: "Email 已被註冊" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, email, password: hashedPassword, isAdmin: false });
+    const user = new User({ username, email, password, isAdmin: false });
 
     await user.save();
     res.status(201).json({ message: "註冊成功" });
   } catch (error) {
     res.status(400).json({ error: error.message });
+    console.error('註冊失敗：', error); // 添加這行
   }
 });
 
@@ -34,6 +33,11 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) return res.status(400).json({ message: 'User not found' });
+
+  // 檢查密碼是否存在
+  if (!user.password) {
+    return res.status(400).json({ message: '此帳號使用第三方登入，請使用相應方式登入' });
+  }
 
   const isMatch = await user.comparePassword(password);
   if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
