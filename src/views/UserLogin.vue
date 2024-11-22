@@ -1,3 +1,4 @@
+<!-- src/views/UserLogin.vue -->
 <template>
   <div class="login-container">
     <h2 class="login-title">{{ $t("user_login.title") }}</h2>
@@ -81,6 +82,8 @@ export default {
         props.onClose();
         router.push("/");
       } catch (error) {
+        console.error('Login failed:', error); // 增加詳細日誌
+        console.error('Response data:', error.response?.data); // 查看後端返回的錯誤訊息
         alert(t("user_login.login_failed"));
       }
     };

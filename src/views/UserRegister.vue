@@ -1,3 +1,4 @@
+<!-- /src/views/UserRegister.vue -->
 <template>
   <div class="register-container">
     <h2 class="register-title">{{ $t('user_register.title') }}</h2>
@@ -78,6 +79,8 @@ export default {
         props.onClose();
         router.push('/login');
       } catch (error) {
+        console.error('Registration failed:', error); // 增加詳細日誌
+        console.error('Response data:', error.response?.data); // 查看後端返回的錯誤訊息
         alert(error.response?.data?.error || t('user_register.error'));
       }
     };
