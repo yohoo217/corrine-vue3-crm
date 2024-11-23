@@ -30,9 +30,12 @@ const PORT = process.env.PORT || 5001;
 
 // 日誌中間件（方便開發調試）
 app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  if (!req.url.startsWith('/api/')) {
+    return express.static(path.join(__dirname, '../dist'))(req, res, next);
+  }
   next();
 });
+
 
 // Express session 配置
 app.use(
@@ -78,7 +81,11 @@ app.get('/api/test', (req, res) => {
 app.use(express.static(path.join(__dirname, '../dist')));
 
 // 通配符路由（處理 SPA 的前端路由）
-app.get('*', (req, res) => {
+app.get('*', (req, res, next) => {
+  console.log('Fallback Route Hit:', req.url);
+  if (req.url.startsWith('/api/')) {
+    return next(); // 將請求交給其他路由處理
+  }
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 

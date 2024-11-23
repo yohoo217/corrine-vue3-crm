@@ -8,82 +8,46 @@ VUE3-COURSE-CRM 是一個基於 Vue 3 的課程預訂和 CRM 系統，於設計�
 
 ```
 VUE3-COURSE-CRM
-|-- package.json
-|-- package-lock.json
-|-- pnpm-lock.yaml
-|-- server_backup.js
-|-- middleware
-|   |-- auth.js
-|   |-- admin.js
-|-- server
-|   |-- models
-|   |   |-- Booking.js
-|   |   |-- Course.js
-|   |   |-- Customer.js
-|   |   |-- User.js
-|   |-- routes
-|   |   |-- bookings.js
-|   |   |-- courses.js
-|   |   |-- customers.js
-|   |   |-- payment.js
-|   |   |-- users.js
-|   |-- server.js
-|   |-- package.json
-|   |-- package-lock.json
-|   |-- .env
-|
-|-- src
-    |-- api
-    |   |-- config.js
-    |-- assets
-    |   |-- logo.png
-    |-- components
-    |   |-- BookingForm.vue
-    |   |-- CourseList.vue
-    |   |-- CRMDashboard.vue
-    |   |-- ErrorBoundary.vue
-    |   |-- HelloWorld.vue
-    |   |-- SiteFooter.vue
-    |-- locales
-    |   |-- en.json
-    |   |-- zh.json
-    |-- router
-    |   |-- bookings.js
-    |   |-- courses.js
-    |   |-- index.js
-    |-- store
-    |   |-- modules
-    |       |-- auth.js
-    |       |-- courses.js
-    |       |-- customers.js
-    |       |-- index.js
-    |-- views
-    |   |-- AdminOrders.vue
-    |   |-- BookingPage.vue
-    |   |-- CourseDetail.vue
-    |   |-- CourseInfo.vue
-    |   |-- CourseList.vue
-    |   |-- CRM.vue
-    |   |-- HomePage.vue
-    |   |-- NewsPage.vue
-    |   |-- PersonalInfo.vue
-    |   |-- UserLogin.vue
-    |   |-- UserRegister.vue
-    |-- App.vue
-|-- Config Files
-    |-- .browserslistrc
-    |-- .eslintrc.js
-    |-- .gitignore
-    |-- babel.config.js
-    |-- jsconfig.json
-    |-- typings.d.ts
-    |-- vue.config.js
-|-- Documentation
-    |-- api-docs.md
-    |-- config.md
-    |-- db-design.md
-    |-- instructions.md
-    |-- test-plan.md
+.
+├── README.md               # 專案簡介文件
+├── api-docs.md             # API 文件
+├── babel.config.js         # Babel 配置
+├── config.md               # 配置說明
+├── db-design.md            # 資料庫設計文件
+├── dist                    # 打包後的輸出目錄
+│   ├── css                 # 打包的 CSS
+│   ├── fonts               # 字型資源
+│   ├── img                 # 圖片資源
+│   └── js                  # 打包的 JavaScript
+├── instructions.md         # 使用說明文件
+├── jsconfig.json           # JavaScript 設定
+├── middleware              # 中間件
+│   ├── admin.js            # 管理員驗證中間件
+│   └── auth.js             # 認證中間件
+├── models                  # 資料模型
+│   └── Course.js           # 課程模型
+├── node_modules            # 依賴文件（省略具體內容）
+├── package-lock.json       # 鎖定的依賴版本
+├── package.json            # 專案依賴與腳本配置
+├── server                  # 伺服器端代碼
+│   ├── models              # 資料模型
+│   ├── routes              # 路由
+│   └── server.js           # 主伺服器檔案
+├── src                     # 前端代碼
+│   ├── App.vue             # 主應用組件
+│   ├── api                 # API 請求相關文件
+│   ├── assets              # 靜態資源
+│   ├── components          # Vue 組件
+│   ├── i18n.js             # 國際化設置
+│   ├── locales             # 翻譯文件
+│   ├── main.js             # 應用入口
+│   ├── router              # 路由設置
+│   ├── store               # 狀態管理
+│   └── views               # 頁面視圖
+├── test-plan.md            # 測試計畫
+├── typings.d.ts            # TypeScript 類型定義
+└── vue.config.js           # Vue 配置文件
+
 ```
 
 ## 安裝與運行
