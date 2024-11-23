@@ -8,27 +8,30 @@ VUE3-COURSE-CRM 是一個基於 Vue 3 的課程預訂和 CRM 系統，於設計�
 
 ```
 VUE3-COURSE-CRM
-|-- .env
 |-- package.json
 |-- package-lock.json
 |-- pnpm-lock.yaml
-|-- server.js
 |-- server_backup.js
-|-- Middleware
+|-- middleware
 |   |-- auth.js
 |   |-- admin.js
-|-- Server
-|   |-- Models
+|-- server
+|   |-- models
 |   |   |-- Booking.js
 |   |   |-- Course.js
 |   |   |-- Customer.js
 |   |   |-- User.js
-|   |-- Routes
-|       |-- bookings.js
-|       |-- courses.js
-|       |-- customers.js
-|       |-- payment.js
-|       |-- users.js
+|   |-- routes
+|   |   |-- bookings.js
+|   |   |-- courses.js
+|   |   |-- customers.js
+|   |   |-- payment.js
+|   |   |-- users.js
+|   |-- server.js
+|   |-- package.json
+|   |-- package-lock.json
+|   |-- .env
+|
 |-- src
     |-- api
     |   |-- config.js
@@ -55,18 +58,18 @@ VUE3-COURSE-CRM
     |       |-- customers.js
     |       |-- index.js
     |-- views
-        |-- AdminOrders.vue
-        |-- BookingPage.vue
-        |-- CourseDetail.vue
-        |-- CourseInfo.vue
-        |-- CourseList.vue
-        |-- CRM.vue
-        |-- HomePage.vue
-        |-- NewsPage.vue
-        |-- PersonalInfo.vue
-        |-- UserLogin.vue
-        |-- UserRegister.vue
-        |-- App.vue
+    |   |-- AdminOrders.vue
+    |   |-- BookingPage.vue
+    |   |-- CourseDetail.vue
+    |   |-- CourseInfo.vue
+    |   |-- CourseList.vue
+    |   |-- CRM.vue
+    |   |-- HomePage.vue
+    |   |-- NewsPage.vue
+    |   |-- PersonalInfo.vue
+    |   |-- UserLogin.vue
+    |   |-- UserRegister.vue
+    |-- App.vue
 |-- Config Files
     |-- .browserslistrc
     |-- .eslintrc.js
