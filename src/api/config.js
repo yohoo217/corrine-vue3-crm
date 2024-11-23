@@ -2,7 +2,9 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://example.com/api',
+  baseURL: process.env.NODE_ENV === "production" 
+    ? "https://example.com/api" // 正式環境的 API 路徑
+    : "http://localhost:5001/api", // 本地開發的 API 路徑
   headers: {
     'Content-Type': 'application/json'
   },

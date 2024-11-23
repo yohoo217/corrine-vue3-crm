@@ -88,12 +88,12 @@ export default {
             Authorization: `Bearer ${store.state.auth.token}`,
           },
         });
-        console.log("Vuex token:", store.state.auth.token);
         user.value = response.data;
-        console.log("User data:", user.value);
-        console.log("Fetched user data:", response.data);
+
 
         if (!user.value.email) {
+          console.log("User data:", user.value);
+          console.log("Fetched user data:", response.data);
           console.error("User email is undefined");
           // 可以顯示錯誤訊息或重新導向
           return;
