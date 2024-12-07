@@ -6,7 +6,7 @@ const ecpay_payment = require('ecpay_aio_nodejs');
 const Booking = require("../models/Booking"); // Booking 模型
 require('dotenv').config();
 
-const { MERCHANTID, HASHKEY, HASHIV, HOST } = process.env;
+const { MERCHANTID, HASHKEY, HASHIV, HOST, FRONTEND_URL } = process.env;
 
 const options = {
   OperationMode: 'Test', // Test or Production
@@ -94,7 +94,9 @@ router.post('/return', async (req, res) => {
 
 
 router.get('/clientReturn', (req, res) => {
-  res.redirect('http://localhost:8080/booking'); // 重定向到订课页面
+  // 從 HOST 中移除 API 路徑部分
+  const baseURL = HOST.replace(/\/api$/, '');
+  res.redirect(`${baseURL}/booking`);
 });
 
 module.exports = router;
