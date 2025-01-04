@@ -1,7 +1,7 @@
 //src/store/index.js
 import { createStore } from "vuex";
 import axios from "axios";
-import originalCourses from "./modules/courses";
+import courses from "./modules/courses";
 import auth from './modules/auth';
 import users from './modules/users';
 
@@ -55,31 +55,6 @@ const bookings = {
   },
 };
 
-// 修改 courses 模塊以使用新的 apiClient
-const courses = {
-  ...originalCourses,
-  actions: {
-    ...originalCourses.actions,
-    async fetchCourses({ commit }) {
-      try {
-        const response = await apiClient.get('/courses');
-        commit('setCourses', response.data);
-      } catch (error) {
-        console.error('Error fetching courses:', error);
-        throw error;
-      }
-    },
-    async addCourse({ dispatch }, courseData) {
-      try {
-        await apiClient.post('/courses', courseData);
-        await dispatch('fetchCourses');
-      } catch (error) {
-        console.error('Error adding course:', error);
-        throw error;
-      }
-    },
-  },
-};
 export default createStore({
   modules: {
     courses,

@@ -12,7 +12,12 @@
           <p>{{ formatDate(news.date) }}</p>
         </div>
         <div class="news-content">
-          <h3>{{ $t(news.titleKey) }}</h3>
+          <h3>
+            {{ $t(news.titleKey) }}
+            <template v-if="news.location">
+              @ {{ $t(`${news.locationKey}`) }} - {{ $t(`${news.numberKey}`) }}
+            </template>
+          </h3>
           <p>{{ $t(news.summaryKey) }}</p>
           <a
             :href="news.link"
@@ -37,6 +42,8 @@ export default {
           id: 1,
           date: "2024-07-24",
           titleKey: "news.autumn_course.title",
+          locationKey: "news.autumn_course.location",
+          numberKey: "news.autumn_course.number",
           summaryKey: "news.autumn_course.summary",
           link: "https://www.instagram.com/p/C9zTBFfvmYW/?img_index=1",
         },

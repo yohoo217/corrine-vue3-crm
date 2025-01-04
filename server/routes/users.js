@@ -31,13 +31,8 @@ router.post("/register", async (req, res) => {
 // 用戶登入路由
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select('+password');
   if (!user) return res.status(400).json({ message: 'User not found' });
-
-  // 檢查密碼是否存在
-  if (!user.password) {
-    return res.status(400).json({ message: '此帳號使用第三方登入，請使用相應方式登入' });
-  }
 
   const isMatch = await user.comparePassword(password);
   if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
