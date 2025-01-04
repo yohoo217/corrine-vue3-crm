@@ -55,7 +55,49 @@ router.post('/login', async (req, res) => {
   res.json({ token, role });
 });
 
+// 獲取所有非管理員用戶
+router.get('/non-admin', auth, async (req, res) => {
+  try {
+    const users = await User.find({ isAdmin: false }).select('-password');
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: error.message });
+  }
+});
 
+// 更新用戶
+router.put('/:id', auth, async (req, res) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true }
+    ).select('-password');
+    
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// 刪除用戶
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({ message: 'User deleted successfully', user: deletedUser });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ message: error.message });
+  }
+});
 
 // 獲取當前用戶資料
 router.get("/me", auth, async (req, res) => {

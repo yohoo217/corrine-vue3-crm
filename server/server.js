@@ -13,7 +13,6 @@ const app = express();
 
 // 導入路由
 const userRoutes = require('./routes/users');
-const customersRouter = require('./routes/customers');
 const coursesRouter = require('./routes/courses');
 const bookingsRouter = require('./routes/bookings');
 const paymentRouter = require('./routes/payment');
@@ -68,7 +67,6 @@ app.use(passport.session());
 // API 路由
 app.use('/api/users', userRoutes);
 app.use('/api/courses', coursesRouter);
-app.use('/api/customers', customersRouter);
 app.use('/api/bookings', bookingsRouter);
 app.use('/api/payment', paymentRouter);
 

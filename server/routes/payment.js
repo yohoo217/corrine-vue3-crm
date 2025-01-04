@@ -6,7 +6,7 @@ const ecpay_payment = require('ecpay_aio_nodejs');
 const Booking = require("../models/Booking"); // Booking 模型
 require('dotenv').config();
 
-const { MERCHANTID, HASHKEY, HASHIV, HOST, FRONTEND_URL } = process.env;
+const { MERCHANTID, HASHKEY, HASHIV, HOST } = process.env;
 
 const options = {
   OperationMode: 'Test', // Test or Production

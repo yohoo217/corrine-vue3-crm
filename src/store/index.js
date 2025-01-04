@@ -1,9 +1,9 @@
 //src/store/index.js
 import { createStore } from "vuex";
 import axios from "axios";
-import customers from './modules/customers';
 import originalCourses from "./modules/courses";
 import auth from './modules/auth';
+import users from './modules/users';
 
 // const API_URL = "http://localhost:5001/api";
 const API_URL = "https://wangcom.online/api";
@@ -16,7 +16,6 @@ const apiClient = axios.create({
   timeout: 10000,
   withCredentials: true,
 });
-
 
 const bookings = {
   namespaced: true,
@@ -83,9 +82,9 @@ const courses = {
 };
 export default createStore({
   modules: {
-    customers,
     courses,
     bookings,
     auth,
+    users
   },
 });

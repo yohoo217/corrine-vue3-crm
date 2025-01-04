@@ -4,7 +4,7 @@
     <h2>客戶關係管理</h2>
     <TabView>
       <TabPanel header="客戶列表">
-        <DataTable :value="customers" :paginator="true" :rows="10" 
+        <DataTable :value="users" :paginator="true" :rows="10" 
                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                    :rowsPerPageOptions="[5,10,20,50]"
                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -23,8 +23,8 @@
           <Column field="email" header="Email" sortable style="width:25%"></Column>
           <Column header="Actions" style="width:25%">
             <template #body="slotProps">
-              <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="editCustomer(slotProps.data)" />
-              <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteCustomer(slotProps.data)" />
+              <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="editUser(slotProps.data)" />
+              <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteUser(slotProps.data)" />
             </template>
           </Column>
         </DataTable>
@@ -34,21 +34,21 @@
       </TabPanel>
     </TabView>
 
-    <Dialog v-model:visible="customerDialog" :style="{width: '450px'}" header="Customer Details" :modal="true" class="p-fluid">
+    <Dialog v-model:visible="userDialog" :style="{width: '450px'}" header="User Details" :modal="true" class="p-fluid">
       <div class="field">
         <label for="username">Username</label>
-        <InputText id="username" v-model.trim="customer.username" required autofocus :class="{'p-invalid': submitted && !customer.username}" />
-        <small class="p-error" v-if="submitted && !customer.username">Username is required.</small>
+        <InputText id="username" v-model.trim="user.username" required autofocus :class="{'p-invalid': submitted && !user.username}" />
+        <small class="p-error" v-if="submitted && !user.username">Username is required.</small>
       </div>
 
       <div class="field">
         <label for="email">Email</label>
-        <InputText id="email" v-model.trim="customer.email" required :class="{'p-invalid': submitted && !customer.email}" />
-        <small class="p-error" v-if="submitted && !customer.email">Email is required.</small>
+        <InputText id="email" v-model.trim="user.email" required :class="{'p-invalid': submitted && !user.email}" />
+        <small class="p-error" v-if="submitted && !user.email">Email is required.</small>
       </div>
       <template #footer>
-        <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
-        <Button label="Save" icon="pi pi-check" text @click="saveCustomer" />
+        <Button label="Cancel" icon="pi pi-times" outlined @click="hideDialog" />
+        <Button label="Save" icon="pi pi-check" @click="saveUser" />
       </template>
     </Dialog>
 
@@ -61,6 +61,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useToast } from 'primevue/usetoast';
 import { useConfirm } from "primevue/useconfirm";
+import { useRouter } from 'vue-router';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
@@ -89,10 +90,11 @@ export default {
     const store = useStore();
     const toast = useToast();
     const confirm = useConfirm();
+    const router = useRouter();
 
-    const customers = computed(() => store.getters['customers/getCustomers']);
-    const customerDialog = ref(false);
-    const customer = ref({});
+    const users = computed(() => store.getters['users/getUsers']);
+    const userDialog = ref(false);
+    const user = ref({});
     const submitted = ref(false);
     const globalFilter = ref('');
 
@@ -120,78 +122,100 @@ export default {
       }
     });
 
-    onMounted(() => {
-      store.dispatch('customers/fetchCustomers');
-      // Here you would also fetch booking statistics
+    onMounted(async () => {
+      const token = store.state.auth.token;
+      if (!token) {
+        toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: '請先登入',
+          life: 3000
+        });
+        router.push('/login');
+        return;
+      }
+      
+      try {
+        await store.dispatch('users/fetchUsers');
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: '獲取用戶列表失敗',
+          life: 3000
+        });
+      }
     });
 
     const clearFilter = () => {
       globalFilter.value = null;
     };
 
-    const editCustomer = (data) => {
-      customer.value = {...data};
-      customerDialog.value = true;
+    const editUser = (data) => {
+      user.value = {...data};
+      userDialog.value = true;
     };
 
-    const confirmDeleteCustomer = (data) => {
+    const confirmDeleteUser = (data) => {
       confirm.require({
-        message: 'Are you sure you want to delete this customer?',
+        message: 'Are you sure you want to delete this user?',
         header: 'Confirm',
         icon: 'pi pi-exclamation-triangle',
-        accept: () => deleteCustomer(data)
+        accept: () => deleteUser(data)
       });
     };
 
-    const deleteCustomer = async (data) => {
+    const deleteUser = async (data) => {
       try {
-        await store.dispatch('customers/deleteCustomer', data._id);
-        toast.add({severity:'success', summary: 'Successful', detail: 'Customer Deleted', life: 3000});
+        await store.dispatch('users/deleteUser', data._id);
+        toast.add({severity:'success', summary: 'Successful', detail: 'User Deleted', life: 3000});
       } catch (error) {
-        console.error('Error deleting customer:', error);
-        toast.add({severity:'error', summary: 'Error', detail: `Failed to delete customer: ${error.message}`, life: 3000});
+        console.error('Error deleting user:', error);
+        toast.add({severity:'error', summary: 'Error', detail: 'Failed to delete user', life: 3000});
       }
     };
 
     const hideDialog = () => {
-      customerDialog.value = false;
+      userDialog.value = false;
       submitted.value = false;
     };
 
-    const saveCustomer = async () => {
+    const saveUser = async () => {
       submitted.value = true;
-      if (customer.value.username && customer.value.email) {
+
+      if (user.value.username && user.value.email) {
         try {
-          if (customer.value._id) {
-            await store.dispatch('customers/updateCustomer', customer.value);  // Ensure customer.name is used
-            toast.add({severity:'success', summary: 'Successful', detail: 'Customer Updated', life: 3000});
+          if (user.value._id) {
+            await store.dispatch('users/updateUser', user.value);
+            toast.add({severity:'success', summary: 'Successful', detail: 'User Updated', life: 3000});
           } else {
-            await store.dispatch('customers/addCustomer', customer.value);
-            toast.add({severity:'success', summary: 'Successful', detail: 'Customer Created', life: 3000});
+            await store.dispatch('users/addUser', user.value);
+            toast.add({severity:'success', summary: 'Successful', detail: 'User Created', life: 3000});
           }
-          customerDialog.value = false;
-          customer.value = {};
+          userDialog.value = false;
+          user.value = {};
         } catch (error) {
-          toast.add({severity:'error', summary: 'Error', detail: 'Failed to save customer', life: 3000});
+          console.error('Error saving user:', error);
+          toast.add({severity:'error', summary: 'Error', detail: 'Failed to save user', life: 3000});
         }
       }
     };
 
-
     return {
-      customers,
-      customerDialog,
-      customer,
+      users,
+      userDialog,
+      user,
       submitted,
       globalFilter,
       bookingStats,
       chartOptions,
       clearFilter,
-      editCustomer,
-      confirmDeleteCustomer,
-      deleteCustomer,
+      editUser,
+      confirmDeleteUser,
+      deleteUser,
       hideDialog,
-      saveCustomer
+      saveUser
     };
   }
 }
