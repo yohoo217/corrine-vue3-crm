@@ -22,6 +22,7 @@
         </template>
       </Menubar>
       <router-view></router-view>
+      <TrekSDK />
       <SiteFooter />
       <Toast />
       <ConfirmDialog />
@@ -51,6 +52,7 @@ import Dialog from "primevue/dialog";
 import UserLogin from "./views/UserLogin.vue";
 import UserRegister from "./views/UserRegister.vue";
 import { useI18n } from 'vue-i18n'; // 引入 useI18n
+import TrekSDK from './components/TrekSDK.vue';
 
 export default {
   name: "App",
@@ -62,6 +64,7 @@ export default {
     Dialog,
     UserLogin,
     UserRegister,
+    TrekSDK,
   },
   setup() {
     const store = useStore();
