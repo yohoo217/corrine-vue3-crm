@@ -53,6 +53,7 @@ import UserLogin from "./views/UserLogin.vue";
 import UserRegister from "./views/UserRegister.vue";
 import { useI18n } from 'vue-i18n'; // 引入 useI18n
 import TrekSDK from './components/TrekSDK.vue';
+import { useHead } from '@vueuse/head';
 
 export default {
   name: "App",
@@ -70,6 +71,15 @@ export default {
     const store = useStore();
     const router = useRouter();
     const { locale, t } = useI18n(); // 解构出 locale 和 t
+
+    useHead({
+      meta: [
+        {
+          name: 'google-adsense-account',
+          content: 'ca-pub-6381709506959276'
+        }
+      ]
+    });
 
     const showLoginDialog = ref(false);
     const showRegisterDialog = ref(false);

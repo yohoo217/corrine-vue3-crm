@@ -8,7 +8,7 @@ import ToastService from 'primevue/toastservice'
 import ConfirmationService from 'primevue/confirmationservice'
 import axios from 'axios'
 import i18n from './i18n' // 引入 i18n
-
+import { createHead } from '@vueuse/head'
 
 // PrimeVue styles
 import 'primevue/resources/themes/saga-blue/theme.css'
@@ -47,7 +47,6 @@ app.use(PrimeVue)
 app.use(ToastService)
 app.use(ConfirmationService)
 app.use(i18n) // 使用 i18n
-
-
+app.use(createHead()) // 初始化 head
 
 app.mount('#app')

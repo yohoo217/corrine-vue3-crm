@@ -1,17 +1,13 @@
 <template>
   <div>
     <div id="supr-ad-container"></div>
-    <div v-if="showAdsense">
-      <GoogleAdsense />
-    </div>
+    <GoogleAdsense />
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import GoogleAdsense from './GoogleAdsense.vue';
-
-const showAdsense = ref(false);
 
 onMounted(() => {
   (function (w, d, s, src, n) {
@@ -37,8 +33,8 @@ onMounted(() => {
     "AotterTrek"
   );
 
-  // Initialize AotterTrek
-  window.AotterTrek("init", "3tAOxQn5xG//E4tv3J6B");
+  // Initialize AotterTrek with an invalid ID to force failure
+  window.AotterTrek("init", "invalid-id");
   window.AotterTrek("send");
 
   // Initialize SuprAd
@@ -46,10 +42,10 @@ onMounted(() => {
     selector: "#supr-ad-container",
     place: "5a41c4d0-b268-43b2-9536-d774f46c33bf",
     onAdLoad: () => {
-      showAdsense.value = false;
+      console.log('Ad loaded');
     },
     onAdFail: () => {
-      showAdsense.value = true;
+      console.log('Ad failed, showing AdSense');
     },
   });
 
